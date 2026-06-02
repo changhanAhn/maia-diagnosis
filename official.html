@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MAIA 제조AI 진단 — 우리 공장, 어떤 유형·어떤 AI로 시작할까? (스마트공장 구축지원사업 대비)</title>
+<meta name="description" content="제조AI특화 스마트공장 구축지원사업 대비 무료 진단. 데이터 수집·검증/AI공장 구축 유형 판정 + 공정별 AI기능 추천 + 사업계획서 문장까지. MAIA v1.0" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" />
+<link rel="stylesheet" as="style" crossorigin
+  href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+<style>
+  :root{
+    --navy:#1F3864; --blue:#2E75B6; --lblue:#BDD7EE;
+    --ink:#1A1A2E; --gray:#6B7280; --line:#E5E7EB; --bg:#FFFFFF; --soft:#F7F9FC;
+    --green-bg:#C6EFCE; --green-fg:#1E6F2E;
+    --yellow-bg:#FFEB9C; --yellow-fg:#9C5700;
+    --red-bg:#FFC7CE; --red-fg:#9C0006;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Pretendard',-apple-system,BlinkMacSystemFont,system-ui,'Segoe UI',Roboto,'Malgun Gothic',sans-serif;
+    color:var(--ink);background:var(--bg);line-height:1.6;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:0 20px}
+  section{padding:64px 0}
+  .hidden{display:none !important}
+
+  /* HERO */
+  .hero{background:linear-gradient(160deg,var(--navy),#16294a);color:#fff;text-align:center;padding:88px 0 72px}
+  .hero .badge{display:inline-block;font-size:13px;letter-spacing:.04em;background:rgba(255,255,255,.12);
+    border:1px solid rgba(255,255,255,.25);padding:6px 14px;border-radius:999px;margin-bottom:22px}
+  .hero h1{font-size:34px;font-weight:800;line-height:1.3;letter-spacing:-.02em}
+  .hero h1 .accent{color:#8FC3F2}
+  .hero p{margin-top:18px;font-size:17px;color:#D7E3F4;font-weight:400}
+  .hero .meta{margin-top:8px;font-size:14px;color:#9FB6D6}
+  .btn{display:inline-block;border:none;cursor:pointer;font-family:inherit;font-weight:700;
+    border-radius:999px;transition:transform .12s ease,box-shadow .12s ease,background .15s ease;text-decoration:none}
+  .btn:active{transform:translateY(1px)}
+  .btn-primary{background:#fff;color:var(--navy);font-size:17px;padding:16px 38px;margin-top:34px;
+    box-shadow:0 8px 24px rgba(0,0,0,.18)}
+  .btn-primary:hover{box-shadow:0 12px 30px rgba(0,0,0,.26)}
+  .btn-cta{background:var(--blue);color:#fff;font-size:16px;padding:15px 26px}
+  .btn-cta:hover{background:#255f96}
+  .btn-ghost{background:var(--soft);color:var(--navy);font-size:16px;padding:15px 26px;border:1px solid var(--line)}
+  .btn-ghost:hover{background:#eef2f8}
+
+  /* QUIZ */
+  .progress{position:sticky;top:0;background:rgba(255,255,255,.92);backdrop-filter:blur(6px);
+    z-index:5;border-bottom:1px solid var(--line);padding:14px 0}
+  .progress .wrap{display:flex;align-items:center;gap:14px}
+  .pbar{flex:1;height:8px;background:var(--line);border-radius:999px;overflow:hidden}
+  .pbar i{display:block;height:100%;width:0;background:var(--blue);border-radius:999px;transition:width .25s ease}
+  .pcount{font-size:13px;color:var(--gray);font-weight:600;white-space:nowrap}
+
+  .q{margin-bottom:28px;padding-bottom:28px;border-bottom:1px dashed var(--line)}
+  .q:last-of-type{border-bottom:none}
+  .q .code{font-size:12px;font-weight:700;color:var(--blue);letter-spacing:.06em}
+  .q .gate-tag{display:inline-block;font-size:11px;font-weight:700;color:var(--red-fg);
+    background:var(--red-bg);border-radius:6px;padding:1px 7px;margin-left:6px;vertical-align:middle}
+  .q h3{font-size:19px;font-weight:700;margin:6px 0 10px;letter-spacing:-.01em}
+  .q-hint{font-size:13px;color:var(--gray);background:var(--soft);border-radius:8px;
+    padding:9px 12px;margin:0 0 14px;line-height:1.6}
+  .opts{display:grid;gap:10px}
+  .opt{display:flex;align-items:center;gap:12px;padding:14px 16px;border:1.5px solid var(--line);
+    border-radius:12px;cursor:pointer;transition:border-color .12s,background .12s}
+  .opt:hover{border-color:var(--lblue);background:var(--soft)}
+  .opt input{appearance:none;width:20px;height:20px;border:2px solid #C4CCD8;border-radius:50%;
+    flex:none;position:relative;cursor:pointer;transition:border-color .12s}
+  .opt input:checked{border-color:var(--blue)}
+  .opt input:checked::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--blue)}
+  .opt.sel{border-color:var(--blue);background:#F0F6FC}
+  .opt span{font-size:15.5px}
+  .quiz-actions{margin-top:36px;text-align:center}
+  .quiz-actions .hint{font-size:13px;color:var(--gray);margin-top:14px}
+  #submitBtn[disabled]{opacity:.45;cursor:not-allowed}
+
+  .section-head{text-align:center;margin-bottom:40px}
+  .section-head h2{font-size:27px;font-weight:800;letter-spacing:-.02em}
+  .section-head p{color:var(--gray);margin-top:8px;font-size:15px}
+
+  /* RESULT */
+  .result-card{background:var(--soft);border:1px solid var(--line);border-radius:var(--radius);
+    padding:36px 30px;text-align:center}
+  .gauge-label{font-size:14px;color:var(--gray);font-weight:600}
+  .score-num{font-size:54px;font-weight:800;color:var(--navy);line-height:1.1;margin:4px 0 2px}
+  .score-num small{font-size:22px;color:var(--gray);font-weight:600}
+  .meter{height:14px;background:#E3E9F2;border-radius:999px;overflow:hidden;margin:18px auto 8px;max-width:420px}
+  .meter i{display:block;height:100%;width:0;border-radius:999px;transition:width .8s cubic-bezier(.2,.8,.2,1)}
+  .grade{display:inline-block;font-size:18px;font-weight:800;border-radius:999px;padding:8px 22px;margin-top:18px}
+  .verdict{margin-top:16px;font-size:16px;color:var(--ink)}
+  .pnote{margin:14px auto 0;max-width:480px;font-size:14.5px;color:#374151;background:#fff;
+    border:1px solid var(--line);border-radius:12px;padding:14px 18px;text-align:left;line-height:1.7}
+  .pnote b{color:var(--navy)}
+  .pn-task{font-size:15px;color:var(--ink);margin-bottom:10px}
+  .pn-task b{color:var(--navy)}
+  .pn-group{margin-top:12px}
+  .pn-group:first-of-type{margin-top:0}
+  .pn-label{font-size:13px;font-weight:700;color:var(--red-fg);margin-bottom:5px}
+  .pn-label.pn-good{color:var(--green-fg)}
+  .pn-group ul{list-style:none;margin:0;padding:0;display:grid;gap:5px}
+  .pn-group li{font-size:14px;color:#374151;padding-left:15px;position:relative;line-height:1.55}
+  .pn-group li::before{content:"·";position:absolute;left:3px;color:var(--gray);font-weight:700}
+  .task-box{max-width:560px;margin:0 auto 30px;text-align:left}
+  .task-box label{display:block;font-size:14px;font-weight:700;color:var(--navy);margin-bottom:8px}
+  .task-box input{width:100%;padding:14px 16px;border:1.5px solid var(--line);border-radius:12px;
+    font-size:15.5px;font-family:inherit}
+  .task-box input:focus{outline:none;border-color:var(--blue)}
+  .task-box .sub{font-size:12.5px;color:var(--gray);margin-top:6px}
+  .radar-box{margin:34px auto 0;display:flex;justify-content:center}
+  canvas{max-width:100%}
+
+  /* LOCKED / EMAIL GATE */
+  .locked{position:relative;margin-top:28px;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+  .locked .blur{position:absolute;inset:0;filter:blur(6px);opacity:.5;padding:26px;pointer-events:none;user-select:none;overflow:hidden}
+  .locked .blur ul{list-style:none;text-align:left;display:grid;gap:10px;max-width:440px;margin:0 auto}
+  .locked .blur li{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 16px;font-size:14px}
+  .lock-overlay{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;background:rgba(255,255,255,.55);padding:28px 20px}
+  .lock-overlay .lock-ico{font-size:26px}
+  .lock-overlay h4{font-size:18px;font-weight:800;margin:6px 0 4px;color:var(--navy)}
+  .lock-overlay p{font-size:14px;color:var(--gray);max-width:380px}
+  .email-form{display:flex;gap:8px;margin-top:16px;width:100%;max-width:420px}
+  .email-form input{flex:1;padding:13px 16px;border:1.5px solid var(--line);border-radius:10px;font-size:15px;font-family:inherit}
+  .email-form input:focus{outline:none;border-color:var(--blue)}
+  .lead-form{display:grid;gap:8px;width:100%;max-width:420px;margin-top:16px}
+  .lead-form input{padding:13px 16px;border:1.5px solid var(--line);border-radius:10px;font-size:15px;font-family:inherit}
+  .lead-form input:focus{outline:none;border-color:var(--blue)}
+  .lead-form .btn{margin-top:2px}
+
+  /* PAID CTA */
+  .cta-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px}
+  .cta-card{border:1px solid var(--line);border-radius:var(--radius);padding:26px 22px;text-align:left;
+    background:#fff;display:flex;flex-direction:column}
+  .cta-card.hi{border-color:var(--blue);box-shadow:0 6px 22px rgba(46,117,182,.12)}
+  .cta-card .tier{font-size:12px;font-weight:700;color:var(--blue);letter-spacing:.06em}
+  .cta-card h4{font-size:19px;font-weight:800;margin:6px 0 4px}
+  .cta-card .price{font-size:15px;color:var(--gray);font-weight:600}
+  .cta-card ul{list-style:none;margin:16px 0 22px;display:grid;gap:8px}
+  .cta-card li{font-size:14px;padding-left:20px;position:relative;color:#374151}
+  .cta-card li::before{content:"✓";position:absolute;left:0;color:var(--blue);font-weight:800}
+  .cta-card .btn{margin-top:auto;text-align:center}
+  .cta-single{max-width:440px;margin:0 auto}
+
+  /* 점수 계산 내역 */
+  .breakdown{margin-top:24px;text-align:left;border:1px solid var(--line);border-radius:12px;background:#fff}
+  .breakdown summary{cursor:pointer;padding:13px 18px;font-size:14px;font-weight:700;color:var(--navy);list-style:none}
+  .breakdown summary::-webkit-details-marker{display:none}
+  .breakdown summary::before{content:"▸ ";color:var(--blue)}
+  .breakdown[open] summary::before{content:"▾ "}
+  .bd-table{width:100%;border-collapse:collapse;font-size:13px}
+  .bd-table th,.bd-table td{padding:9px 12px;border-top:1px solid var(--line);text-align:left;vertical-align:top}
+  .bd-table th{color:var(--gray);font-weight:600;background:var(--soft)}
+  .bd-table td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .bd-total{font-weight:800;color:var(--navy)}
+  #shareBox{width:100%;height:150px;margin-top:12px;padding:12px;border:1.5px solid var(--blue);border-radius:10px;
+    font-family:ui-monospace,Consolas,monospace;font-size:12px;color:#374151;resize:vertical}
+
+  /* 우리 개발 방식 3-mode */
+  .modes{margin-top:24px;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+  .modes-title{background:var(--soft);padding:12px 18px;font-size:13.5px;font-weight:700;color:var(--navy);
+    border-bottom:1px solid var(--line)}
+  .mode-row{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:13px 18px;
+    border-bottom:1px solid var(--line);font-size:14px;transition:background .15s}
+  .mode-row:last-child{border-bottom:none}
+  .mode-row b{color:var(--ink);white-space:nowrap}
+  .mode-row span{color:var(--gray);text-align:right;font-size:13px}
+  .mode-row.on{background:#F0F6FC}
+  .mode-row.on b{color:var(--blue)}
+  .mode-row.on::after{content:"← 지금 결과";color:var(--blue);font-size:11.5px;font-weight:700;white-space:nowrap}
+  .funnel-note{margin-top:16px;background:#F0F6FC;border:1px solid var(--lblue);border-radius:var(--radius);
+    padding:18px 20px;font-size:14px;line-height:1.75;color:#334155;text-align:center}
+  .funnel-note b{color:var(--navy)}
+
+  /* 제조AI: 유형·매트릭스·추진절차 */
+  .biz{margin-top:28px;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+  .biz-head{background:var(--navy);color:#fff;padding:16px 20px}
+  .biz-head .k{font-size:12px;letter-spacing:.04em;color:#9FB6D6;font-weight:600}
+  .biz-head .v{font-size:21px;font-weight:800;margin-top:3px}
+  .biz-head .v small{font-size:13px;font-weight:600;color:#BDD7EE;margin-left:8px}
+  .biz-body{padding:20px}
+  .biz-row{display:flex;gap:12px;padding:12px 0;border-bottom:1px dashed var(--line);font-size:14.5px}
+  .biz-row:last-child{border-bottom:none}
+  .biz-row .lab{flex:none;width:118px;color:var(--gray);font-weight:700}
+  .biz-row .val{color:var(--ink)}
+  .biz-row .val b{color:var(--navy)}
+  .chip{display:inline-block;font-size:12.5px;font-weight:700;border-radius:8px;padding:3px 10px;
+    background:var(--lblue);color:var(--navy)}
+  .chip.auto{background:var(--green-bg);color:var(--green-fg)}
+  .chip.semi{background:var(--yellow-bg);color:var(--yellow-fg)}
+  .chip.manual{background:var(--red-bg);color:var(--red-fg)}
+  .plan-box{margin-top:14px;background:#F0F6FC;border:1px solid var(--lblue);border-radius:12px;padding:16px 18px}
+  .plan-box .pl-lab{font-size:12.5px;font-weight:700;color:var(--blue);margin-bottom:7px}
+  .plan-box .pl-txt{font-size:14.5px;color:#1f2d44;line-height:1.75}
+  .plan-box .pl-copy{margin-top:10px;font-size:12.5px;color:var(--blue);cursor:pointer;
+    text-decoration:underline;font-weight:600;display:inline-block}
+  /* 추진절차 스트립 */
+  .stagebar{margin-top:24px;border:1px solid var(--line);border-radius:var(--radius);padding:18px 16px}
+  .stagebar .sb-title{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:14px;text-align:center}
+  .sb-flow{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;align-items:stretch}
+  .sb-step{position:relative;flex:1 1 0;min-width:62px;max-width:110px;border:1px solid var(--line);
+    border-radius:10px;padding:8px 6px;text-align:center;background:#fff;font-size:11.5px;color:var(--gray)}
+  .sb-step b{display:block;font-size:11px;color:var(--ink);font-weight:700;line-height:1.3;margin-top:2px}
+  .sb-step.maia{border-color:var(--blue);background:#F0F6FC}
+  .sb-step.maia b{color:var(--blue)}
+  .sb-step.dt{border-color:#36A85B;background:#EAF7EE}
+  .sb-step.dt b{color:var(--green-fg)}
+  .sb-step .tag{position:absolute;top:-9px;left:50%;transform:translateX(-50%);font-size:9.5px;
+    font-weight:800;padding:1px 7px;border-radius:999px;white-space:nowrap}
+  .sb-step.maia .tag{background:var(--blue);color:#fff}
+  .sb-step.dt .tag{background:#36A85B;color:#fff}
+  .sb-legend{margin-top:12px;font-size:12px;color:var(--gray);text-align:center;line-height:1.7}
+  .sb-legend b{color:var(--navy)}
+  @media(max-width:560px){ .sb-step{min-width:0;flex:1 1 28%;font-size:10.5px} }
+
+  footer{background:var(--soft);border-top:1px solid var(--line);padding:30px 0;text-align:center;
+    font-size:12.5px;color:var(--gray)}
+  .restart{display:inline-block;margin-top:18px;color:var(--blue);font-size:14px;cursor:pointer;
+    text-decoration:underline;font-weight:600}
+
+  @media(max-width:560px){
+    .hero h1{font-size:27px}.score-num{font-size:44px}
+    .cta-grid{grid-template-columns:1fr}
+    .email-form{flex-direction:column}
+    section{padding:48px 0}
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== HERO ===== -->
+<header class="hero" id="hero">
+  <div class="wrap">
+    <span class="badge">MAIA v1.0 · 제조AI 적용성 자가진단</span>
+    <h1>우리 공장, 어떤 유형·<br><span class="accent">어떤 AI로 시작할까?</span></h1>
+    <p>공정 1개 + 8개 질문, 3분. <b>데이터 수집·검증 / AI공장 구축</b> 중 어느 유형인지, 어느 공정에 어떤 AI를 적용할지 알려드립니다.</p>
+    <p class="meta">한국폴리텍대학 대구캠퍼스 이차전지시스템과 · 안창한</p>
+    <button class="btn btn-primary" onclick="startQuiz()">진단 시작하기</button>
+  </div>
+</header>
+
+<!-- ===== QUIZ ===== -->
+<div id="quizWrap" class="hidden">
+  <div class="progress">
+    <div class="wrap">
+      <div class="pbar"><i id="pbarFill"></i></div>
+      <span class="pcount" id="pcount">0 / 8</span>
+    </div>
+  </div>
+  <section>
+    <div class="wrap">
+      <div class="section-head">
+        <h2>개선하려는 공정·업무를 정해 주세요</h2>
+        <p>특정 공정·반복 업무 하나를 기준으로 답하면 정확합니다.</p>
+      </div>
+      <div class="task-box">
+        <label for="procSelect">어느 공정을 개선하고 싶으신가요? <span style="color:var(--gray);font-weight:400">(제조AI 매트릭스 기준)</span></label>
+        <select id="procSelect" style="width:100%;padding:14px 16px;border:1.5px solid var(--line);border-radius:12px;font-size:15.5px;font-family:inherit;background:#fff"></select>
+        <p class="sub" style="margin-bottom:18px">예) 제조공정 = 설비·가공·조립·검사, 환경/에너지/안전 = 전력·배출·작업안전</p>
+        <label for="taskInput">구체적으로 어떤 업무인가요?</label>
+        <input id="taskInput" type="text" placeholder="예: 설비 진동·온도를 보고 작업자가 고장 시점을 판단하는 일" />
+        <p class="sub">한 줄로 적어 주세요. 결과를 이 업무에 맞춰 설명해 드립니다. (선택)</p>
+      </div>
+      <form id="quizForm"></form>
+      <div class="quiz-actions">
+        <button class="btn btn-cta" id="submitBtn" disabled onclick="calcResult()">결과 보기 →</button>
+        <p class="hint" id="quizHint">8개 문항에 모두 답해 주세요.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ===== RESULT ===== -->
+<div id="resultWrap" class="hidden">
+  <section>
+    <div class="wrap">
+      <div class="section-head">
+        <h2>진단 리포트</h2>
+        <p>MAIA 8개 항목으로 "이 일을 누가 맡으면 좋을지"를 평가한 결과입니다.</p>
+      </div>
+
+      <div class="result-card">
+        <div class="gauge-label">AI 적용 가능성</div>
+        <div class="score-num"><span id="scoreVal">0.00</span><small> / 1.00</small></div>
+        <div class="meter"><i id="meterFill"></i></div>
+        <div class="grade" id="gradeBadge">—</div>
+        <div class="verdict" id="verdictText">—</div>
+        <div class="pnote" id="personalNote"></div>
+        <div class="radar-box"><canvas id="radar" width="380" height="340"></canvas></div>
+        <details class="breakdown" id="breakdown"><summary>점수 계산 내역 보기</summary><div id="breakdownBody"></div></details>
+        <textarea id="shareBox" class="hidden" readonly></textarea>
+      </div>
+
+      <!-- 제조AI: 추천 유형 + 매트릭스 셀 + 사업계획서 문장 -->
+      <div class="biz" id="bizCard">
+        <div class="biz-head">
+          <div class="k">제조AI특화 스마트공장 구축지원사업 — 추천 지원유형</div>
+          <div class="v" id="bizType">—</div>
+        </div>
+        <div class="biz-body" id="bizBody"></div>
+      </div>
+
+      <!-- 추진절차 위치: MAIA·DT가 단계마다 다시 쓰인다 (한 번 쓰고 끝 아님) -->
+      <div class="stagebar">
+        <div class="sb-title">이 결과는 사업 추진절차의 어디에 쓰이나요? (한 번 쓰고 끝이 아닙니다)</div>
+        <div class="sb-flow">
+          <div class="sb-step"><span>②·③</span><b>신청·요건</b></div>
+          <div class="sb-step maia"><span class="tag">MAIA</span><span>④</span><b>사업계획서<br>유형·AI 결정</b></div>
+          <div class="sb-step maia"><span class="tag">MAIA·DT</span><span>⑤</span><b>기술성평가<br>평가 방어</b></div>
+          <div class="sb-step dt"><span class="tag">MAIA·DT</span><span>⑦·⑧</span><b>협약·구축<br>구축지도</b></div>
+          <div class="sb-step dt"><span class="tag">MAIA·DT</span><span>⑩</span><b>최종평가<br>시나리오·검증</b></div>
+        </div>
+        <div class="sb-legend">
+          <b>MAIA(프로세스)</b>는 ④ 유형 결정뿐 아니라 <b>지금 ⑤ 평가 근거·⑧ 구축지도·⑩ 검증기준</b>까지 단계마다 다시 쓰입니다. ·
+          <b>디지털 트윈(산출물)</b>은 ⑤ 데모·⑧ 실구축·⑩ 시나리오 검증을 제공합니다.
+        </div>
+      </div>
+
+      <!-- 우리 개발 방식: 세 갈래를 쉽게 -->
+      <div class="modes">
+        <div class="modes-title">우리가 만들어 줄 수 있는 일인지, 세 갈래로</div>
+        <div class="mode-row" id="mode-ai"><b>🤖 AI로 개발</b><span>바로 만들 수 있어요 (사람은 확인만)</span></div>
+        <div class="mode-row" id="mode-co"><b>🤝 함께 개발</b><span>만들 수 있지만 시간·노력이 더 들어요</span></div>
+        <div class="mode-row" id="mode-hu"><b>🙋 전문가가 살펴볼 일</b><span>전문가 분석 후 개발 가능 여부 판단</span></div>
+      </div>
+
+      <div class="funnel-note">
+        이 결과는 <b>8문항 기반의 1차 진단</b>입니다. 8문항이 담지 못하는 부분이 있어,
+        정식 진단에서는 업무를 더 잘게 나눠 <b>어디까지 개발 가능한지</b>를 확인합니다.
+      </div>
+
+      <!-- (담당자용 중립판) 리드 수집 PDF 게이트 제거됨 — 상세 해석은 위 '점수 계산 내역'에서 확인 -->
+
+      <!-- (담당자용 중립판) 영업 상담 CTA 제거 — 중립 문의처만 표기 -->
+      <div class="section-head" style="margin-top:56px">
+        <h2>문의</h2>
+        <p>본 진단은 8문항 기반 1차 스크리닝입니다. 현장 정밀 진단은 별도로 안내드립니다.</p>
+      </div>
+      <div class="cta-single">
+        <div class="cta-card">
+          <span class="tier">문의처</span>
+          <h4>한국폴리텍대학 대구캠퍼스 이차전지시스템과 · 안창한</h4>
+          <ul>
+            <li>이메일: chahn@kopo.ac.kr</li>
+            <li>MAIA v1.0 진단 방법론 · 디지털 트윈 구축</li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="text-align:center"><span class="restart" onclick="restart()">↺ 다시 진단하기</span></div>
+    </div>
+  </section>
+</div>
+
+<footer>
+  MAIA v1.0 &nbsp;|&nbsp; 한국폴리텍대학 대구캠퍼스 이차전지시스템과 &nbsp;|&nbsp; 안창한 &nbsp;|&nbsp; 2026<br>
+  <span style="font-size:11.5px">방법론 근거: 검증된 수학적 평가기법과 Anthropic·OpenAI의 공식 표준문서를 참고해 자체 개발 (SCI 논문화 진행 중).<br>
+  본 도구는 자체 개발 자가진단이며 특정 지원사업의 공식 진단 도구가 아닙니다. 입력 정보는 외부로 전송·저장되지 않고 브라우저 안에서만 계산됩니다.</span>
+</footer>
+
+<script>
+/* ── MAIA 8차원 정의 (가중치·채점은 generate_maia_tool.py SOT와 일치) ── */
+const DIMS = [
+  { code:"C1", name:"규칙·구조", weight:0.20,
+    q:"이 업무는 정해진 규칙·기준대로 하나요, 사람의 감·경험으로 하나요?",
+    hint:"정해진 양식·기준에 맞춰 처리할수록 AI에 유리합니다.",
+    opts:[
+      {l:"정해진 규칙 없이 사람의 감·경험으로 한다", s:0.0},
+      {l:"대체로 경험으로 하되 일부 기준·문서가 있다", s:0.3},
+      {l:"정해진 양식·기준·체크리스트대로 한다", s:0.6},
+      {l:"수식·코드·데이터 규칙으로 완전히 정해져 있다", s:0.9},
+    ]},
+  { code:"C2", name:"정보 완전성", weight:0.15,
+    q:"이 일에 필요한 정보가 서류·파일·시스템 안에 다 들어 있나요?",
+    hint:"현장에 직접 가봐야 알 수 있는 정보가 많을수록 낮습니다.",
+    opts:[
+      {l:"현장에 가야만 알 수 있는 게 많다", s:0.0},
+      {l:"일부는 시스템에, 일부는 현장 확인이 필요하다", s:0.4},
+      {l:"대부분 서류·화면으로 확인된다", s:0.7},
+      {l:"모든 정보가 파일·시스템에 디지털로 있다", s:1.0},
+    ]},
+  { code:"C3", name:"보편성", weight:0.20,
+    q:"이 업무는 다른 회사·부서에서도 흔히 하는 일인가요?",
+    hint:"흔한 일일수록 AI가 참고·학습할 사례가 많습니다.",
+    opts:[
+      {l:"우리 회사만의 아주 특수한 일이다", s:0.0},
+      {l:"업계에서 가끔 보이는 일이다", s:0.3},
+      {l:"같은 업종이면 대부분 하는 일이다", s:0.6},
+      {l:"업종 불문 어디서나 하는 표준 업무다", s:0.8},
+    ]},
+  { code:"C4", name:"디지털화", weight:0.15,
+    q:"이 업무는 주로 무엇으로 하나요?",
+    hint:"이미 컴퓨터·시스템으로 할수록 AI가 이어받기 쉽습니다.",
+    opts:[
+      {l:"몸으로 하는 현장 작업이다 (손·기계)", s:0.0},
+      {l:"종이·전화·대면 위주로 한다", s:0.3},
+      {l:"컴퓨터 프로그램으로 한다 (엑셀·사내 시스템 등)", s:0.6},
+      {l:"여러 시스템을 오가며 디지털로만 한다", s:0.9},
+    ]},
+  { code:"C5", name:"결과 검증", weight:0.10,
+    q:"결과가 맞는지 어떻게 확인하나요?",
+    hint:"시스템이 자동으로 걸러줄수록 AI에 유리합니다.",
+    opts:[
+      {l:"현장에서 직접 물건·설비를 봐야 안다", s:0.0},
+      {l:"담당자가 눈으로 일일이 검토한다", s:0.3},
+      {l:"일부는 숫자·시스템이 자동으로 걸러준다", s:0.6},
+      {l:"시스템이 맞는지 자동으로 검증해준다", s:0.9},
+    ]},
+  { code:"C6", name:"오류 영향", weight:0.10,
+    q:"이 업무에서 실수가 나면 어떤 일이 벌어지나요?",
+    hint:"실수의 파장이 클수록 사람의 손이 더 필요합니다.",
+    opts:[
+      {l:"안전사고·설비 파손으로 이어진다", s:0.0},
+      {l:"서비스 중단·고객 피해가 생긴다", s:0.3},
+      {l:"재작업이 필요하다 (안전과는 무관)", s:0.6},
+      {l:"거의 무해하고 금방 바로잡는다", s:0.9},
+    ]},
+  { code:"C7", name:"물리 의존성", weight:0.05, invert:true, gate:true,
+    q:"사람이 직접 손으로 다뤄야 하는 물리 작업이 있나요?",
+    hint:"컴퓨터 입력·클릭·마우스 조작은 '물리 작업'이 아닙니다(자동화 대상). 부품 조립·배선·운반처럼 실제로 손을 써야 하는 것만 해당.",
+    opts:[
+      {l:"없다 — 컴퓨터·서류상으로만 이뤄진다", s:0.0},
+      {l:"가끔 현장에서 물건·설비를 직접 확인·조작해야 한다", s:0.4},
+      {l:"상당 부분 사람이 직접 다뤄야 한다", s:0.7},
+      {l:"대부분 사람 손 작업이다 (조립·배선·운반·계측 등)", s:1.0},
+    ]},
+  { code:"C8", name:"안전·법적 판단", weight:0.05, invert:true, gate:true,
+    q:"이 업무 결과에 법적·안전상의 책임 판단이 필요한가요?",
+    hint:"내용을 한 번 보고 넘기는 '단순 검토·컨펌'은 책임 판단이 아닙니다. 서명·인허가처럼 사람이 법적 책임을 지는 것만 해당.",
+    opts:[
+      {l:"필요 없다 — 일반 사무 결과물이다", s:0.0},
+      {l:"AI가 만들고 사람이 검토·컨펌하면 된다", s:0.3},
+      {l:"법적·안전상 사람의 공식 승인이 꼭 필요하다", s:0.7},
+      {l:"사람이 법적·안전 책임을 단독 판단해야 한다 (서명 등)", s:1.0},
+    ]},
+];
+
+const answers = new Array(DIMS.length).fill(null);
+const answerIdx = new Array(DIMS.length).fill(null);
+
+/* ── 붙임1 제조AI 기능별·공정별 매트릭스 (공고 p.12 SOT) ──
+   공정(A~G) × AI기능(1~5). 제조 핵심공정(D·F·E)을 앞에 노출(집중형). */
+const PROCESSES = [
+  { code:"D", name:"제조공정" },
+  { code:"F", name:"환경/에너지/안전" },
+  { code:"E", name:"물류" },
+  { code:"C", name:"구매" },
+  { code:"G", name:"사후서비스" },
+  { code:"B", name:"제품기획/설계" },
+  { code:"A", name:"재무/인사관리" },
+];
+const FUNCS = { 1:"인지", 2:"예측", 3:"자동화", 4:"소통", 5:"생성" };
+const MATRIX = {
+  A:{1:"계약서 검토",2:"채용시스템 운영",3:"ERP 결합 업무 자동화",4:"챗봇 기반 사내 정보 검색",5:"업무 보고서 생성"},
+  B:{1:"기술 자료 검색",2:"시제품 성능 예측",3:"특허 분석 자동화",4:"코드 CD/CI 자동화",5:"신제품 아이디어 생성"},
+  C:{1:"자재 구매 데이터 통합 분석",2:"원자재 가격 예측",3:"자재 수급 최적화",4:"자동 발주 추천",5:"수요예측과 협업 최적화"},
+  D:{1:"작업자·동작 감지",2:"실시간 설비 이상 예측",3:"불량 분석 자동화",4:"디지털 트윈 내 실시간 협업",5:"가상 품질 평가"},
+  E:{1:"드론 활용 재고 추적",2:"실시간 재고·공급 예측",3:"실시간 물류 제어",4:"배송 경로 최적화",5:"디지털 트윈 기반 물류 창고"},
+  F:{1:"현장작업자 자세 위험도 분석",2:"산업용 전력소비량 예측",3:"공장 에너지 자율제어",4:"AI 기반 안전점검 AR 챗봇",5:"탄소배출·환경영향평가 리포트 생성"},
+  G:{1:"제품 에러코드 판별",2:"고객 리뷰 분석",3:"예지보전 자동화",4:"보이스봇 고객 문의 처리",5:"매뉴얼 제공"},
+};
+function selectedProc(){
+  const code=(document.getElementById('procSelect')||{}).value || "D";
+  return PROCESSES.find(p=>p.code===code) || PROCESSES[0];
+}
+
+/* ── 운영 설정 (🙋 계정 생성 후 URL만 채우면 가동) ──
+   신청 폼은 leadFormAction(A7y8Xo) 하나로 통일한다 — 중복 폼 금지(2026-05-30 정책).
+   모든 신청(자가진단 리드·상세 리포트·PoC)은 같은 폼으로 보내고, 어느 버튼에서
+   왔는지는 kind 파라미터(lead/detail/poc)로만 구분한다(Tally hidden field로 수신).
+   - leadFormAction : 단일 통합 신청 폼 (Tally). 모든 CTA가 공유
+   - detailReportUrl: 비워두면 leadFormAction을 그대로 재사용(권장). 별도 폼 만들지 말 것
+   - pocBookingUrl  : 상담 '시간 예약'은 폼과 기능이 다름 → Cal.com/Calendly 전용.
+                      비워두면 leadFormAction으로 폴백(시간 조율은 수동)
+   진단 점수·등급은 폼 URL에 자동으로 붙어 리드 기록에 함께 저장된다. */
+const CONFIG = {   // (담당자용 중립판) 외부 전송 전면 비활성화 — 리드 폼·상담 링크·메일 발송 없음
+  operatorEmail:   "",
+  leadFormAction:  "",
+  detailReportUrl: "",
+  pocBookingUrl:   "",
+};
+let lastResult = { score:null, gated:false, grade:"", task:"", answers:[] };
+
+/* 점수·등급·업무명·8답변을 쿼리스트링으로 붙여 폼/예약에 전달.
+   a(=C1..C8 raw)와 task는 맞춤 진단 리포트(generate_maia_report.py) 생성에 사용된다.
+   Tally 숨김 필드(score·grade·task·a·src·email·kind)로 자동 수신 → 운영자/Make가 리포트 생성.
+   src: ?src=community 단일 파라미터를 우선 추출(채널 추적), 없으면 location.search 전체 보존(폴백).
+   kind: 호출 인자(버튼 출처) 우선, 없으면 ?kind=detail/poc URL 오버라이드, 둘 다 없으면 'lead'.
+         운영자가 Tally 폼에 hidden field 'kind'를 등록해야 시트에 적재됨 (intake-sop.md §7-1 참조). */
+function withResult(url, kind){
+  if(!url) return "";
+  const urlParams = new URLSearchParams(location.search);
+  const srcVal = urlParams.get('src') || (location.search||"").replace(/^\?/,'');
+  const kindVal = kind || urlParams.get('kind') || "lead";
+  const q = new URLSearchParams({
+    kind:  kindVal,                                  // 출처 구분(lead/detail/poc). 단일 통합 폼 정책
+    score: lastResult.gated ? "gated" : (lastResult.score!=null?lastResult.score.toFixed(2):""),
+    grade: lastResult.grade || "",
+    task:  lastResult.task || "",
+    proc:  lastResult.proc || "",                    // 선택 공정 (붙임1 A~G)
+    biztype: lastResult.biztype || "",               // 추천 유형 (데이터 수집·검증 / AI공장 구축)
+    a:     (lastResult.answers||[]).join(','),       // C1..C8 raw — 항목별 해석 생성용
+    src:   srcVal                                    // 채널 추적: community/blog/youtube/email 등
+  });
+  return url + (url.includes('?')?'&':'?') + q.toString();
+}
+
+/* ── 렌더 ── */
+function buildQuiz(){
+  const form = document.getElementById('quizForm');
+  form.innerHTML = DIMS.map((d,i)=>`
+    <div class="q" data-i="${i}">
+      <div class="code">${d.code} · ${d.name}${d.gate?'<span class="gate-tag">하드게이트</span>':''}</div>
+      <h3>${d.q}</h3>
+      ${d.hint?`<p class="q-hint">💡 ${d.hint}</p>`:''}
+      <div class="opts">
+        ${d.opts.map((o,j)=>`
+          <label class="opt" data-i="${i}" data-j="${j}">
+            <input type="radio" name="q${i}" value="${o.s}" />
+            <span>${o.l}</span>
+          </label>`).join('')}
+      </div>
+    </div>`).join('');
+
+  form.querySelectorAll('.opt').forEach(el=>{
+    el.addEventListener('click',()=>{
+      const i=+el.dataset.i, j=+el.dataset.j;
+      answers[i]=DIMS[i].opts[j].s;
+      answerIdx[i]=j;
+      el.parentElement.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));
+      el.classList.add('sel');
+      el.querySelector('input').checked=true;
+      updateProgress();
+    });
+  });
+}
+
+function updateProgress(){
+  const done=answers.filter(a=>a!==null).length;
+  document.getElementById('pbarFill').style.width=(done/DIMS.length*100)+'%';
+  document.getElementById('pcount').textContent=`${done} / ${DIMS.length}`;
+  const ready=done===DIMS.length;
+  document.getElementById('submitBtn').disabled=!ready;
+  document.getElementById('quizHint').textContent=
+    ready?'모두 답했습니다. 결과를 확인하세요.':`${DIMS.length-done}개 문항이 남았습니다.`;
+}
+
+function startQuiz(){
+  document.getElementById('hero').classList.add('hidden');
+  document.getElementById('quizWrap').classList.remove('hidden');
+  window.scrollTo(0,0);
+}
+
+/* ── 점수 계산 (엔진과 동일) ──
+   score = Σ(C1..C6 * w) + (1-C7)*0.05 + (1-C8)*0.05
+   하드게이트: C7 raw==1.0 또는 C8 raw==1.0 → 🙋 강제 (점수 계산 생략) */
+function calcResult(){
+  const gated = (answers[6]===1.0) || (answers[7]===1.0);
+  let score=null;
+  if(!gated){
+    score=0;
+    DIMS.forEach((d,i)=>{
+      const v=d.invert ? (1-answers[i]) : answers[i];
+      score += v*d.weight;
+    });
+    score=Math.round(score*1000)/1000;
+  }
+  showResult(score, gated);
+}
+
+/* MAIA 판정 = "우리 시스템이 이 일을 개발해 줄 수 있는가" (8문항 1차 스크리닝)
+   AI 단독=무조건 개발 가능 / 협업=개발 가능하나 노력↑ / 사람 단독=설문상 어려움(상담서 확정)
+   ※ 설문이 모든 걸 담지 못하므로 어떤 결과든 리포트+상담으로 확정한다(막다른 길 금지). */
+function gradeOf(score, gated){
+  if(gated) return {label:"🙋 전문가가 살펴봐야 할 일이에요", cls:"red", mode:"전문가 분석 후 개발 가능 여부 판단",
+    verdict:"설문상으로는 전문가 진단이 필요한 일로 보입니다. 8문항이 모든 상황을 담지는 못합니다. 손작업·안전 책임 주변 업무는 AI로 도울 여지가 있고, 정식 진단에서 확인합니다."};
+  if(score>=0.75) return {label:"🤖 AI로 개발할 수 있어요", cls:"green", mode:"AI 단독 · 개발 가능",
+    verdict:"AI가 맡아 처리할 수 있는 일입니다. 바로 시작할 수 있고, 사람은 확인만 하면 됩니다. 시작 방법은 정식 진단에서 정합니다."};
+  if(score>=0.50) return {label:"🤝 AI와 사람이 함께라면 개발할 수 있어요", cls:"yellow", mode:"사람·AI 협업 · 개발 가능",
+    verdict:"개발할 수 있는 일입니다. 어디까지 AI가 맡고 어디부터 사람이 확인할지는 정식 진단에서 정합니다."};
+  return {label:"🙋 전문가가 살펴봐야 할 일이에요", cls:"red", mode:"전문가 분석 후 개발 가능 여부 판단",
+    verdict:"설문상으로는 사람의 손이 큰 영역으로 보입니다. 8문항이 담지 못한 부분이 있어, 업무를 정리하면 '함께 개발'로 올라갈 수 있습니다. 정식 진단에서 확인합니다."};
+}
+
+/* ── 차원별 사용자 언어 이유 (맞춤 설명용) ── */
+const REASON_LOW = {  // 점수가 낮을 때 = AI 도입을 막는 요인
+  C1:"정해진 규칙 없이 사람의 감으로 하는 점",
+  C2:"현장에 가야만 알 수 있는 정보가 많은 점",
+  C3:"우리 회사만의 특수한 일이라는 점",
+  C4:"컴퓨터가 아니라 현장·종이로 처리하는 점",
+  C5:"결과가 맞는지 사람이 직접 확인해야 하는 점",
+  C6:"실수가 큰 사고로 이어질 수 있는 점",
+  C7:"사람 손이 꼭 필요한 작업인 점",
+  C8:"사람이 직접 책임지고 판단해야 하는 점",
+};
+const REASON_HIGH = { // 점수가 높을 때 = AI에 유리한 요인
+  C1:"업무가 규칙·문서로 잘 정리돼 있는 점",
+  C2:"필요한 정보를 화면으로 다 볼 수 있는 점",
+  C3:"어디서나 하는 보편적인 일이라는 점",
+  C4:"이미 컴퓨터·시스템으로 하고 있는 점",
+  C5:"결과를 시스템이 자동으로 확인해 주는 점",
+  C6:"실수가 나도 크게 위험하지 않은 점",
+  C7:"손으로 하는 작업이 거의 없는 점",
+  C8:"안전·법적 판단 부담이 적은 점",
+};
+
+/* 신청자 입력(업무명 + 답변)을 되짚는 맞춤 문장 생성 */
+function personalNote(){
+  const task = (document.getElementById('taskInput')?.value||'').trim();
+  const eff = DIMS.map((d,i)=>({code:d.code, v:(d.invert?(1-answers[i]):answers[i])}));
+  const weak = [...eff].sort((a,b)=>a.v-b.v).filter(x=>x.v<=0.45).slice(0,2);
+  const strong = [...eff].sort((a,b)=>b.v-a.v).filter(x=>x.v>=0.6).slice(0,2);
+
+  let html = task
+    ? `<div class="pn-task">📋 입력하신 <b>'${task}'</b></div>`
+    : `<div class="pn-task">📋 답변을 종합하면</div>`;
+  if(weak.length){
+    html += `<div class="pn-group"><div class="pn-label">전문가 진단이 필요한 점</div><ul>`
+          + weak.map(w=>`<li>${REASON_LOW[w.code]}</li>`).join('') + `</ul></div>`;
+  }
+  if(strong.length){
+    html += `<div class="pn-group"><div class="pn-label pn-good">이미 갖춘 강점</div><ul>`
+          + strong.map(s=>`<li>${REASON_HIGH[s.code]}</li>`).join('') + `</ul></div>`;
+  }
+  return html;
+}
+
+const GRADE_COLORS={
+  green:{bg:"var(--green-bg)",fg:"var(--green-fg)",bar:"#36A85B"},
+  yellow:{bg:"var(--yellow-bg)",fg:"var(--yellow-fg)",bar:"#E0A52E"},
+  red:{bg:"var(--red-bg)",fg:"var(--red-fg)",bar:"#D9534F"},
+};
+
+/* ── 제조AI 유형 판정 ──
+   "데이터 집계방법(자동·반자동·수동)" = 사업 유형 게이트.
+   데이터 성숙도 = C4(디지털화)*0.6 + C2(정보 완전성)*0.4  ※ MAIA 점수와 별개의 매핑층(엔진 무손상)
+   - 수동(<0.40)  → 수집되는 데이터 없음 → [데이터 수집·검증] 유형부터(6개월·최대 0.5억)
+   - 반자동(<0.65) → 데이터 일부 보유    → [AI공장 구축] (데이터 보강 병행)
+   - 자동(≥0.65)  → 데이터 보유          → [AI공장 구축] (9개월·최대 2억) */
+function dataMaturity(){
+  const c4=answers[3], c2=answers[1];
+  const ds=c4*0.6 + c2*0.4;
+  let collect, cls, biztype;
+  if(ds<0.40){ collect="수동"; cls="manual"; biztype="데이터 수집·검증"; }
+  else if(ds<0.65){ collect="반자동"; cls="semi"; biztype="AI공장 구축"; }
+  else { collect="자동"; cls="auto"; biztype="AI공장 구축"; }
+  return { ds:Math.round(ds*100)/100, collect, cls, biztype };
+}
+/* 추진주체(MAIA 판정)에 따른 1차 추천 AI기능(매트릭스 행). 정식 진단에서 확정. */
+function recommendFunc(g){
+  if(g.cls==="green") return 3;   // 자동화
+  if(g.cls==="yellow") return 2;  // 예측
+  return 1;                       // 인지(보조 적용)
+}
+const MODE_SHORT={ green:"AI 단독(🤖)", yellow:"사람·AI 협업(🤝)", red:"전문가 검토 후 결정(🙋)" };
+const MODE_PLAN ={ green:"AI 단독", yellow:"사람·AI 협업", red:"전문가 검토 후 결정" };  // 계획서 문장용(이모지 없이)
+
+/* 현행분석용 약점 사유 텍스트(상위 2개) */
+function weakReasons(n){
+  const eff=DIMS.map((d,i)=>({code:d.code, v:(d.invert?(1-answers[i]):answers[i])}));
+  return [...eff].sort((a,b)=>a.v-b.v).filter(x=>x.v<=0.45).slice(0,n).map(w=>REASON_LOW[w.code]);
+}
+
+function renderBiz(score, gated, g){
+  const proc=selectedProc();
+  const dm=dataMaturity();
+  const task=(document.getElementById('taskInput')?.value||'').trim();
+  const head=document.getElementById('bizType');
+  const body=document.getElementById('bizBody');
+
+  const periodTxt = dm.biztype==="데이터 수집·검증" ? "최대 6개월 · 최대 0.5억원" : "최대 9개월 · 최대 2억원";
+  head.innerHTML = `${dm.biztype} 유형 <small>${periodTxt}</small>`;
+
+  // 데이터 집계방법 행
+  let rows = `<div class="biz-row"><div class="lab">데이터 집계방법</div>
+      <div class="val"><span class="chip ${dm.cls}">${dm.collect}</span>
+      &nbsp;<span style="color:var(--gray);font-size:13px">기술성평가 '데이터 집계 포인트' 항목에 해당</span></div></div>`;
+
+  if(dm.biztype==="데이터 수집·검증"){
+    rows += `<div class="biz-row"><div class="lab">왜 이 유형인가</div>
+        <div class="val">현재 <b>${proc.code}-${proc.name}</b> 공정의 데이터가 대부분 <b>수동</b>으로 다뤄져,
+        AI를 적용할 데이터가 아직 쌓이지 않습니다. 먼저 <b>데이터 수집·관리 체계</b>를 갖추는 단계입니다.</div></div>`;
+    rows += `<div class="biz-row"><div class="lab">우선 할 일</div>
+        <div class="val">${proc.name} 공정의 설비 가동·실적·품질 데이터를 자동 수집하는 체계 구축
+        → 이후 <b>AI공장 구축</b> 유형으로 연계 신청(①→② 단계, 합산 최대 2억).</div></div>`;
+  } else {
+    const fn=recommendFunc(g);
+    rows += `<div class="biz-row"><div class="lab">추천 AI기능<br>(매트릭스 셀)</div>
+        <div class="val"><b>${proc.code}-${proc.name} × ${fn}-${FUNCS[fn]}</b><br>
+        <span style="color:var(--gray);font-size:13px">예시 적용: ${MATRIX[proc.code][fn]}</span></div></div>`;
+    rows += `<div class="biz-row"><div class="lab">추진 주체</div>
+        <div class="val"><b>${MODE_SHORT[g.cls]}</b> — ${g.mode}</div></div>`;
+    // 디지털 트윈 연결 고지 (D·E 공정에서 4-소통 셀이 곧 DT)
+    if(proc.code==="D" || proc.code==="E"){
+      rows += `<div class="biz-row"><div class="lab">디지털트윈 연계</div>
+          <div class="val">${proc.code}-${proc.name} × 4-소통 = <b>${MATRIX[proc.code][4]}</b>.
+          본 진단을 만든 팀의 <b>디지털 트윈</b>이 ⑧구축·⑩검증 단계에 바로 활용됩니다.</div></div>`;
+    }
+  }
+
+  // 현행분석(문제점 도출) — 계획서 배점 항목
+  const weak=weakReasons(2);
+  if(weak.length){
+    rows += `<div class="biz-row"><div class="lab">현행 문제점<br>(계획서용)</div>
+        <div class="val">${weak.join(' · ')}</div></div>`;
+  }
+
+  // 사업계획서 붙여쓰기 문장
+  const procStr=`${proc.code}-${proc.name}`;
+  const probStr= weak.length ? weak.join(', ') : '현행 공정의 데이터 활용도가 낮음';
+  let plan;
+  if(dm.biztype==="데이터 수집·검증"){
+    plan = `당사 ${procStr} 공정은 ${probStr} 등으로 데이터 집계가 '${dm.collect}' 수준이다. `
+         + `이에 [데이터 수집·검증] 유형으로 ${proc.name} 공정의 가동·품질·실적 데이터 수집·관리 체계를 우선 구축하고, `
+         + `차년도 [AI공장 구축] 단계로 연계하여 ${MATRIX[proc.code][2]} 등 AI 적용을 목표로 한다.`;
+  } else {
+    const fn=recommendFunc(g);
+    plan = `당사 ${procStr} 공정은 ${probStr} 등의 문제점이 있으며, 데이터 집계는 '${dm.collect}' 수준이다. `
+         + `이에 [AI공장 구축] 유형으로 ${procStr} 공정에 ${fn}-${FUNCS[fn]}(${MATRIX[proc.code][fn]}) 적용을 추진하며, `
+         + `추진 방식은 '${MODE_PLAN[g.cls]}'으로 한다.`;
+  }
+  const physNote = dm.biztype==="AI공장 구축"
+    ? `설비 디지털화(데이터 자동수집)가 선행되어야 정확합니다. 센서 부재·노후 설비는 '데이터 수집·검증' 유형 선행을 검토하세요.`
+    : `설비 노후·센서 부재 시, 데이터 수집 인프라(IoT·설비연동) 구축이 먼저 필요할 수 있습니다.`;
+  body.innerHTML = rows
+    + `<div class="biz-row"><div class="lab">전제·확산성<br>(계획서 보완)</div>
+         <div class="val"><b>전제</b> ${physNote}<br>
+         <b>경제성·확산성</b> ROI(투자 대비 효과)와 타 공정 확산 가능성은 본 1차 진단이 다루지 않으며, 정식 진단·사업계획서에서 정량화합니다.</div></div>`
+    + `<div class="plan-box">
+         <div class="pl-lab">📋 사업계획서 붙여쓰기용 문장 (초안)</div>
+         <div class="pl-txt" id="planTxt">${plan}</div>
+         <span class="pl-copy" onclick="copyPlan()">⧉ 이 문장 복사</span>
+       </div>`;
+  lastResult.proc=procStr; lastResult.biztype=dm.biztype; lastResult.collect=dm.collect;
+
+  // 공유/복사용 텍스트에 제조AI 진단 요약 덧붙임
+  const sb=document.getElementById('shareBox');
+  if(sb){
+    sb.value += `\n\n── 제조AI 진단 ──\n공정: ${procStr}\n추천 유형: ${dm.biztype}`
+      + `\n데이터 집계방법: ${dm.collect}`
+      + (dm.biztype==="AI공장 구축" ? `\n추천 매트릭스 셀: ${proc.code}-${proc.name} × ${recommendFunc(g)}-${FUNCS[recommendFunc(g)]} (${MATRIX[proc.code][recommendFunc(g)]})` : "")
+      + `\n\n[사업계획서 문장]\n${plan}`;
+  }
+}
+
+function copyPlan(){
+  const t=(document.getElementById('planTxt')?.textContent||'').trim();
+  if(navigator.clipboard){ navigator.clipboard.writeText(t).then(
+    ()=>alert('계획서 문장이 복사됐어요.'),
+    ()=>alert('복사 권한이 없어요. 문장을 직접 선택해 복사해 주세요.')); }
+  else alert('문장을 직접 선택해 복사해 주세요.');
+}
+
+function showResult(score, gated){
+  document.getElementById('quizWrap').classList.add('hidden');
+  document.getElementById('resultWrap').classList.remove('hidden');
+  window.scrollTo(0,0);
+
+  const g=gradeOf(score,gated);
+  lastResult = { score, gated, grade:g.label,
+    task:(document.getElementById('taskInput')?.value||'').trim(),
+    answers:[...answers] };
+  const c=GRADE_COLORS[g.cls];
+  const shown = gated ? 0 : score;
+
+  document.getElementById('scoreVal').textContent = gated ? "—" : score.toFixed(2);
+  const meter=document.getElementById('meterFill');
+  meter.style.background=c.bar;
+  setTimeout(()=>{meter.style.width=(shown*100)+'%';},80);
+
+  const badge=document.getElementById('gradeBadge');
+  badge.textContent=g.label; badge.style.background=c.bg; badge.style.color=c.fg;
+  document.getElementById('verdictText').textContent=g.verdict;
+  document.getElementById('personalNote').innerHTML=personalNote();
+
+  // 3-mode 안내에서 현재 결과 강조
+  ['mode-ai','mode-co','mode-hu'].forEach(id=>document.getElementById(id).classList.remove('on'));
+  const modeId = g.cls==='green' ? 'mode-ai' : (g.cls==='yellow' ? 'mode-co' : 'mode-hu');
+  document.getElementById(modeId).classList.add('on');
+
+  buildBreakdown(score, gated, g);
+  renderBiz(score, gated, g);
+  drawRadar();
+}
+
+/* 점수 계산 내역 표 + 복사용 텍스트 생성 */
+function buildBreakdown(score, gated, g){
+  const task=(document.getElementById('taskInput')?.value||'').trim();
+  let rows='', txt=[];
+  txt.push('── MAIA 진단 결과 ──');
+  if(task) txt.push('업무: '+task);
+  txt.push('판정: '+g.label+'  ('+g.mode+')');
+  txt.push('AI 적용 가능성: '+(gated?'하드게이트(점수 무시)':score.toFixed(3)));
+  txt.push('');
+  txt.push('[항목별 답변·점수]');
+  DIMS.forEach((d,i)=>{
+    const idx=answerIdx[i];
+    const ansLabel = idx!=null ? d.opts[idx].l : '—';
+    const raw = answers[i];
+    const eff = d.invert ? (1-raw) : raw;          // 점수에 반영되는 값
+    const contrib = eff*d.weight;
+    const note = d.invert ? `${raw.toFixed(2)}→${eff.toFixed(2)}` : eff.toFixed(2);
+    rows += `<tr><td><b>${d.code}</b> ${d.name}</td><td>${ansLabel}</td>`
+          + `<td class="num">${note}</td><td class="num">×${d.weight.toFixed(2)}</td>`
+          + `<td class="num">${contrib.toFixed(3)}</td></tr>`;
+    txt.push(`${d.code} ${d.name}: "${ansLabel}" → 값 ${note} ×${d.weight.toFixed(2)} = ${contrib.toFixed(3)}`);
+  });
+  const totalRow = gated
+    ? `<tr class="bd-total"><td colspan="4">합계 (하드게이트 발동)</td><td class="num">—</td></tr>`
+    : `<tr class="bd-total"><td colspan="4">합계</td><td class="num">${score.toFixed(3)}</td></tr>`;
+  document.getElementById('breakdownBody').innerHTML =
+    `<table class="bd-table"><thead><tr><th>항목</th><th>선택한 답변</th><th>값</th><th>가중치</th><th>기여</th></tr></thead>`
+    + `<tbody>${rows}${totalRow}</tbody></table>`
+    + `<p style="font-size:12px;color:var(--gray);padding:10px 14px">C7·C8은 "역전" 항목: 입력값이 높을수록 점수에 불리(값=1−입력). 입력이 최댓값이면 하드게이트로 사람 단독 강제.</p>`;
+  txt.push('');
+  txt.push('판정 기준: ≥0.75 AI / 0.50~0.74 협업 / <0.50 사람 / C7·C8 최댓값=사람(하드게이트)');
+  document.getElementById('shareBox').value = txt.join('\n');
+}
+
+/* ── 레이더 차트 (vanilla canvas, 외부 라이브러리 없음) ── */
+function drawRadar(){
+  const cv=document.getElementById('radar');
+  const dpr=window.devicePixelRatio||1;
+  const W=380,H=340;
+  cv.width=W*dpr; cv.height=H*dpr; cv.style.width=W+'px'; cv.style.height=H+'px';
+  const ctx=cv.getContext('2d'); ctx.scale(dpr,dpr);
+  ctx.clearRect(0,0,W,H);
+
+  const cx=W/2, cy=H/2+8, R=120, N=DIMS.length;
+  // 표시값: C7/C8은 역전 적용 (높을수록 AI 유리)
+  const vals=DIMS.map((d,i)=> d.invert ? (1-answers[i]) : answers[i]);
+
+  // grid
+  ctx.strokeStyle="#E3E9F2"; ctx.fillStyle="#9AA7BD"; ctx.font="11px Pretendard,sans-serif";
+  for(let ring=1;ring<=4;ring++){
+    const r=R*ring/4;
+    ctx.beginPath();
+    for(let i=0;i<=N;i++){
+      const a=-Math.PI/2 + i*2*Math.PI/N;
+      const x=cx+r*Math.cos(a), y=cy+r*Math.sin(a);
+      i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    }
+    ctx.stroke();
+  }
+  // axes + labels
+  for(let i=0;i<N;i++){
+    const a=-Math.PI/2 + i*2*Math.PI/N;
+    const x=cx+R*Math.cos(a), y=cy+R*Math.sin(a);
+    ctx.strokeStyle="#E3E9F2"; ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(x,y); ctx.stroke();
+    const lx=cx+(R+18)*Math.cos(a), ly=cy+(R+18)*Math.sin(a);
+    ctx.fillStyle="#5A6B85"; ctx.textAlign="center"; ctx.textBaseline="middle";
+    ctx.fillText(DIMS[i].code, lx, ly);
+  }
+  // data polygon
+  ctx.beginPath();
+  for(let i=0;i<=N;i++){
+    const k=i%N;
+    const a=-Math.PI/2 + k*2*Math.PI/N;
+    const r=R*Math.max(0.02,vals[k]);
+    const x=cx+r*Math.cos(a), y=cy+r*Math.sin(a);
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  }
+  ctx.closePath();
+  ctx.fillStyle="rgba(46,117,182,.22)"; ctx.fill();
+  ctx.strokeStyle="#2E75B6"; ctx.lineWidth=2; ctx.stroke();
+  // points
+  for(let i=0;i<N;i++){
+    const a=-Math.PI/2 + i*2*Math.PI/N;
+    const r=R*Math.max(0.02,vals[i]);
+    ctx.beginPath(); ctx.arc(cx+r*Math.cos(a),cy+r*Math.sin(a),3.2,0,2*Math.PI);
+    ctx.fillStyle="#1F3864"; ctx.fill();
+  }
+}
+
+/* ── 리포트 신청 ──
+   Tally 폼이 있으면 진단 결과(score·grade·task·a·src)를 hidden으로 넘기며 새 탭으로 연다.
+   회사·이메일·연락처는 Tally에서 한 번만 입력(HTML에서 또 묻지 않음 — 중복 입력 방지). */
+function openLeadForm(e){
+  if(e) e.preventDefault();
+  if(CONFIG.leadFormAction){
+    window.open(withResult(CONFIG.leadFormAction, 'lead'), '_blank');
+  } else if(CONFIG.operatorEmail){
+    // 폴백: Tally 미설정 시 운영자 메일로 진단 요약 발송. 회사·연락처는 본문에 직접 작성.
+    const subject='[진단 리포트 신청]';
+    const body='진단 결과입니다. 회사/기관 · 이메일 · 연락처를 적어 회신해 주세요.\n\n'
+      +(document.getElementById('shareBox')?.value||'');
+    window.location.href='mailto:'+CONFIG.operatorEmail
+      +'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
+  }
+  /* (담당자용 중립판) 로컬 저장 제거 — 진단 결과를 어디에도 저장하지 않음 */
+  const ov=document.getElementById('lockOverlay');
+  ov.innerHTML=`<div class="lock-ico">✅</div><h4>신청 화면이 열렸어요</h4>
+    <p>새 탭에서 연락처를 한 번만 입력하고 제출하면, 진단 리포트를 보내드립니다.</p>`;
+  document.querySelector('#lockedBox .blur').style.filter='none';
+  document.querySelector('#lockedBox .blur').style.opacity='1';
+  return false;
+}
+
+/* ── 결과 복사 (교수님/상담용: 채팅·메모에 붙여넣기) ── */
+function copyResult(){
+  const box=document.getElementById('shareBox');
+  box.classList.remove('hidden');
+  box.focus(); box.select();
+  let ok=false;
+  try{ ok=document.execCommand('copy'); }catch(_){}
+  if(navigator.clipboard){ try{ navigator.clipboard.writeText(box.value); }catch(_){} }
+  alert(ok ? '결과가 복사됐어요. 채팅에 붙여넣어 주세요.'
+           : '아래 상자 내용을 전체 선택(Ctrl+A) 후 복사해 붙여넣어 주세요.');
+}
+
+/* ── 전환 CTA ──
+   전용 URL(detailReportUrl·pocBookingUrl)이 있으면 그것을, 없으면 leadFormAction
+   단일 통합 폼을 재사용한다(중복 폼 금지). 어느 버튼에서 왔는지는 kind로 구분한다. */
+function cta(kind){
+  const url = (kind==='poc' ? CONFIG.pocBookingUrl : CONFIG.detailReportUrl)
+              || CONFIG.leadFormAction;   // 폴백: 단일 통합 폼 재사용
+  if(url){
+    window.open(withResult(url, kind), '_blank');   // kind는 withResult가 부착(중복 방지)
+    return;
+  }
+  alert(kind==='poc'
+    ? '현장 정식진단·PoC 상담 예약 링크 준비 중입니다.'
+    : '공정별 상세 리포트 신청 링크 준비 중입니다.');
+}
+
+function restart(){
+  answers.fill(null); answerIdx.fill(null);
+  buildQuiz(); updateProgress();
+  const ti=document.getElementById('taskInput'); if(ti) ti.value='';
+  const sb=document.getElementById('shareBox'); if(sb){ sb.value=''; sb.classList.add('hidden'); }
+  ['mode-ai','mode-co','mode-hu'].forEach(id=>document.getElementById(id).classList.remove('on'));
+  document.getElementById('resultWrap').classList.add('hidden');
+  document.getElementById('quizWrap').classList.remove('hidden');
+  window.scrollTo(0,0);
+}
+
+function buildProcSelect(){
+  const sel=document.getElementById('procSelect');
+  if(!sel) return;
+  sel.innerHTML = PROCESSES.map(p=>`<option value="${p.code}">${p.code}. ${p.name}</option>`).join('');
+}
+
+buildProcSelect();
+buildQuiz();
+</script>
+</body>
+</html>
