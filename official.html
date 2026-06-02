@@ -34,7 +34,7 @@
   .hero h1{font-size:34px;font-weight:800;line-height:1.3;letter-spacing:-.02em}
   .hero h1 .accent{color:#8FC3F2}
   .hero p{margin-top:18px;font-size:17px;color:#D7E3F4;font-weight:400}
-  .hero .meta{margin-top:8px;font-size:14px;color:#9FB6D6;white-space:nowrap;word-break:keep-all}
+  .hero .meta{margin-top:8px;font-size:12px;color:#9FB6D6;white-space:nowrap;word-break:keep-all}
   .btn{display:inline-block;border:none;cursor:pointer;font-family:inherit;font-weight:700;
     border-radius:999px;transition:transform .12s ease,box-shadow .12s ease,background .15s ease;text-decoration:none}
   .btn:active{transform:translateY(1px)}
@@ -162,13 +162,13 @@
   .modes-title{background:var(--soft);padding:12px 18px;font-size:13.5px;font-weight:700;color:var(--navy);
     border-bottom:1px solid var(--line)}
   .mode-row{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:13px 18px;
-    border-bottom:1px solid var(--line);font-size:14px;transition:background .15s}
+    border-bottom:1px solid var(--line);font-size:14px;opacity:.38;transition:opacity .15s,background .15s}
   .mode-row:last-child{border-bottom:none}
-  .mode-row b{color:var(--ink);white-space:nowrap}
+  .mode-row b{color:var(--gray);white-space:nowrap;font-weight:600}
   .mode-row span{color:var(--gray);text-align:right;font-size:13px}
-  .mode-row.on{background:#F0F6FC}
-  .mode-row.on b{color:var(--blue)}
-  .mode-row.on::after{content:"← 지금 결과";color:var(--blue);font-size:11.5px;font-weight:700;white-space:nowrap}
+  .mode-row.on{background:#F0F6FC;opacity:1}
+  .mode-row.on b{color:var(--blue);font-weight:800}
+  .mode-row.on span{color:var(--blue)}
   .funnel-note{margin-top:16px;background:#F0F6FC;border:1px solid var(--lblue);border-radius:var(--radius);
     padding:18px 20px;font-size:14px;line-height:1.75;color:#334155;text-align:center}
   .funnel-note b{color:var(--navy)}
@@ -304,7 +304,7 @@
 
       <!-- 추진절차 위치: MAIA·DT가 단계마다 다시 쓰인다 (한 번 쓰고 끝 아님) -->
       <div class="stagebar">
-        <div class="sb-title">이 결과는 사업 추진절차의 어디에 쓰이나요?</div>
+        <div class="sb-title">이 진단 결과는 ④ 계획서부터 ⑩ 검증까지 — 단계마다 쓰입니다</div>
         <div class="sb-flow">
           <div class="sb-step"><span>②·③</span><b>신청·요건</b></div>
           <div class="sb-step maia"><span class="tag">MAIA</span><span>④</span><b>사업계획서<br>유형·AI 결정</b></div>
