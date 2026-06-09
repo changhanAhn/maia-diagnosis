@@ -4,7 +4,10 @@
   v0.4 (2026-06-09): 문장 전면 리라이팅 + 설득력 강화
   v0.5 (2026-06-09): 작동3단계 카피 정리(되는 것만 개발/"솔직하게" 삭제) · STEP 무료배지 삭제
                      · 사례 카드 가독성(불릿 줄바꿈) · SCI 문구 삭제 · 가격 "~부터+상담 후 확정"
+  v0.6 (2026-06-09): Hero 무료 micro 삭제 · 본문 줄바꿈 문장단위 통일(4곳)
+                     · 가격 단계기준 명시(기본 T1·T2/옵션 T3·T4) + "메타시스템이라 가능한 가격"
 -->
+
 
 <html lang="ko">
 <head>
@@ -158,7 +161,6 @@
           <a class="btn btn-primary" href="diagnosis.html">무료 진단 시작하기 · 8문항 1분</a>
           <a class="btn btn-line" href="#case">실제 사례 먼저 보기</a>
         </div>
-        <p class="micro">연락처 없이 바로 점수 확인 · 완전 무료</p>
       </div>
       <div class="scorecard">
         <div class="lab">AI 적용 가능성</div>
@@ -180,7 +182,7 @@
       <div class="chip"><span>02</span>개발 — AI 메타시스템이 직접 설계·구현</div>
       <div class="chip"><span>03</span>검수 — 4개 AI의 교차 검증</div>
     </div>
-    <p class="note">진단부터 개발, 검수까지 모두 하나의 메타시스템 안에서 진행합니다. 사람 한 명의 주관적 판단에 의존하지 않고, 4개의 AI가 서로 검증하여 높은 품질을 보장합니다.</p>
+    <p class="note">진단부터 개발, 검수까지 모두 하나의 메타시스템 안에서 진행합니다.<br>사람 한 명의 주관적 판단에 의존하지 않고, 4개의 AI가 서로 검증하여 높은 품질을 보장합니다.</p>
   </div>
 </section>
 <!-- 문제 공감 -->
@@ -188,13 +190,16 @@
   <div class="wrap">
     <span class="eyebrow">이런 업무</span>
     <h2 class="sec">아직도 사람이 매일 붙어 있나요?</h2>
-    <p class="sec-sub">제조·사무·연구·물류, 분야는 달라도 좋습니다. 매일 반복되고 나름의 규칙이 있는 일이라면 진단할 수 있습니다. 아래는 흔한 예시일 뿐입니다.</p>
+    <p class="sec-sub">제조·사무·연구·물류, 분야는 달라도 좋습니다.<br>
+      매일 반복되고 나름의 규칙이 있는 일이라면 진단할 수 있습니다.<br>
+      아래는 흔한 예시일 뿐입니다.</p>
     <div class="g3">
       <div class="item"><div class="k">01 모으기·취합</div><h3>흩어진 데이터 정리</h3><p>카톡·메일·문서로 흩어져 들어온 내용을 매일 같은 표로 다시 모아 정리하는 일.</p></div>
       <div class="item"><div class="k">02 옮기기·변환</div><h3>양식 사이 이관</h3><p>도면·전표·문서의 내용을 다른 양식으로 한 줄씩 손으로 옮겨 적는 일.</p></div>
       <div class="item"><div class="k">03 확인·판정</div><h3>사람 눈으로 판단</h3><p>정해진 기준에 맞는지 사람이 일일이 보고 통과·반려, 합격·불량을 가르는 일.</p></div>
     </div>
-    <p class="sec-sub" style="margin-top:28px">내 업무가 위와 정확히 같지 않아도 괜찮습니다. <a href="#" onclick="document.querySelectorAll('.cards')[0].scrollIntoView({behavior:'smooth'});return false;" style="color:var(--accent);font-weight:700">아래 8가지 업무 유형</a>에서 비슷한 것을 골라 바로 진단해 보세요.</p>
+    <p class="sec-sub" style="margin-top:28px">내 업무가 위와 정확히 같지 않아도 괜찮습니다.<br>
+      <a href="#" onclick="document.querySelectorAll('.cards')[0].scrollIntoView({behavior:'smooth'});return false;" style="color:var(--accent);font-weight:700">아래 8가지 업무 유형</a>에서 비슷한 것을 골라 바로 진단해 보세요.</p>
   </div>
 </section>
 <!-- 작동 3단계 -->
@@ -244,7 +249,7 @@
   <div class="wrap">
     <span class="eyebrow">대상 업무 유형</span>
     <h2 class="sec">어떤 업무가 AI로 될까요?</h2>
-    <p class="sec-sub">8가지 대표 반복 업무입니다. 내 업무와 비슷한 카드를 클릭해 바로 진단해 보세요.</p>
+    <p class="sec-sub">8가지 대표 반복 업무입니다.<br>내 업무와 비슷한 카드를 클릭해 바로 진단해 보세요.</p>
     <div class="cards">
       <a class="ac" href="diagnosis.html?src=home&task=데이터집계"><h4>데이터 집계</h4><p>흩어진 데이터를 매일 엑셀로 모으시나요?</p><span class="go">진단 →</span></a>
       <a class="ac" href="diagnosis.html?src=home&task=추출변환"><h4>추출·변환</h4><p>도면·문서를 표로 직접 옮기시나요?</p><span class="go">진단 →</span></a>
@@ -262,6 +267,7 @@
   <div class="wrap center">
     <span class="eyebrow">개발 비용</span>
     <h2 class="sec">개발 비용 안내</h2>
+    <p class="sec-sub">규모에 따라 T1·T2 중 하나를 고르고, 필요하면 T3·T4를 더합니다.</p>
   </div>
   <div class="wrap">
     <div class="pricing">
@@ -282,7 +288,8 @@
         <div class="amt">연 400만<small>원부터</small></div><div class="dur">12개월 유지보수</div>
       </div>
     </div>
-    <p style="text-align:center;margin-top:24px;font-size:13.5px;color:var(--mute)">* 금액은 업무 범위·데이터 상태에 따라 상담 후 확정됩니다.</p>
+    <p style="text-align:center;margin-top:26px;font-size:14.5px;color:var(--navy);font-weight:700">AI 메타시스템으로 개발하기에 가능한 가격입니다.</p>
+    <p style="text-align:center;margin-top:8px;font-size:13px;color:var(--mute)">* 금액은 업무 범위·데이터 상태에 따라 상담 후 확정됩니다.<br>T3·T4는 기본(T1·T2)에 더하는 옵션입니다.</p>
   </div>
 </section>
 <!-- FAQ -->
