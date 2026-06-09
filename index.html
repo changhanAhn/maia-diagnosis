@@ -2,7 +2,10 @@
 <!--
   landing-home.html → 배포 시 maia-diagnosis repo의 index.html (홈)
   v0.4 (2026-06-09): 문장 전면 리라이팅 + 설득력 강화
+  v0.5 (2026-06-09): 작동3단계 카피 정리(되는 것만 개발/"솔직하게" 삭제) · STEP 무료배지 삭제
+                     · 사례 카드 가독성(불릿 줄바꿈) · SCI 문구 삭제 · 가격 "~부터+상담 후 확정"
 -->
+
 <html lang="ko">
 <head>
 <meta charset="UTF-8" />
@@ -198,11 +201,11 @@
 <section style="background:var(--bg-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
   <div class="wrap">
     <span class="eyebrow">진행 방식</span>
-    <h2 class="sec">먼저 진단하고, 될 일만 진행합니다</h2>
-    <p class="sec-sub">안 되는 일은 솔직하게 “사람이 해야 할 영역”이라고 알려드립니다.</p>
+    <h2 class="sec">먼저 진단하고, 되는 것만 개발합니다</h2>
+    <p class="sec-sub">안 되는 일은 “사람이 해야 할 영역”이라고 분명히 알려드립니다.</p>
     <div class="steps">
-      <div class="step"><div class="n">STEP 01</div><h3>무료 진단</h3><p>8문항 1분 만에 이 업무가 AI로 가능한지 정량 점수를 즉시 확인합니다.</p><span class="free">완전 무료 · 연락처 불필요</span></div>
-      <div class="step"><div class="n">STEP 02</div><h3>무료 상담</h3><p>8문항은 1차 스크리닝입니다. 상담에서 업무를 세밀하게 분석해 AI 범위와 사람 범위를 명확히 구분합니다.</p><span class="free">무료 60분</span></div>
+      <div class="step"><div class="n">STEP 01</div><h3>무료 진단</h3><p>8문항 1분 만에 이 업무가 AI로 가능한지 정량 점수를 즉시 확인합니다.</p></div>
+      <div class="step"><div class="n">STEP 02</div><h3>무료 상담</h3><p>8문항은 1차 스크리닝입니다. 상담에서 업무를 세밀하게 분석해 AI 범위와 사람 범위를 명확히 구분합니다.</p></div>
       <div class="step"><div class="n">STEP 03</div><h3>개발 · 검수</h3><p>합의된 범위만 메타시스템으로 개발하고, 4개의 AI가 철저히 교차 검증합니다.</p><span class="free">개발 비용은 아래 참조</span></div>
     </div>
   </div>
@@ -218,22 +221,22 @@
         <span class="badge done">진단 완료 · MAIA 1호</span>
         <h3>피닉슨컨트롤즈</h3>
         <div class="cat">EV/ESS 배터리 검사·자동화 장비</div>
-        <p>현장 애로기술 3건 진단 — CAD 전기도면→BOM·PLC I/O 자동 변환, 검사 레시피 자동화, 충방전 QC 실시간 이상 탐지. 이후 AI 디지털 트윈 산학 과제로 연계.</p>
+        <p>현장 애로기술 3건 진단.<br>· CAD 전기도면 → BOM·PLC I/O 자동 변환<br>· 검사 레시피 자동화<br>· 충방전 QC 실시간 이상 탐지<br>→ AI 디지털 트윈 산학 과제로 연계</p>
       </div>
       <div class="case-card">
         <span class="badge done">설계 완료</span>
         <h3>협진화학</h3>
         <div class="cat">정밀화학 R&D 자동화</div>
-        <p>R&D 14개 업무를 MAIA 4-AI로 진단해 11건 개발 가능 판정. 문헌·특허 인텔리전스와 배합 최적화, 2층 코파일럿 시스템으로 설계 완료.</p>
+        <p>R&D 14개 업무를 4-AI로 진단.<br>→ 11건 개발 가능 판정<br>· 문헌·특허 인텔리전스<br>· 배합 최적화<br>· 2층 코파일럿으로 설계 완료</p>
       </div>
       <div class="case-card">
         <span class="badge plan">진행 예정</span>
         <h3>대구테크노파크</h3>
         <div class="cat">스마트공장 구축 지원</div>
-        <p>제조AI 멘토링 및 구축 지원. LG 코인셀 생산공정 디지털 트윈을 레퍼런스로 지역 기업 디지털 전환을 지원할 예정입니다.</p>
+        <p>제조AI 멘토링·구축 지원 예정.<br>· LG 코인셀 생산공정 디지털 트윈을 레퍼런스로<br>· 지역 제조기업 디지털 전환 지원</p>
       </div>
     </div>
-    <p class="case-cap">MAIA 방법론은 위 사례를 포함해 <b>총 22개 업무 케이스</b>로 검증되었습니다 (SCI 논문 투고 중).</p>
+    <p class="case-cap">MAIA 방법론은 위 사례를 포함해 <b>총 22개 업무 케이스</b>로 검증되었습니다.</p>
   </div>
 </section>
 <!-- archetype 8 -->
@@ -264,21 +267,22 @@
     <div class="pricing">
       <div class="price hi">
         <div class="t">T1</div><h4>단일 PoC</h4>
-        <div class="amt">200만~350만<small>원</small></div><div class="dur">3~4주 · 업무 1개</div>
+        <div class="amt">200만<small>원부터</small></div><div class="dur">3~4주 · 업무 1개</div>
       </div>
       <div class="price">
         <div class="t">T2</div><h4>다중 PoC</h4>
-        <div class="amt">500만~900만<small>원</small></div><div class="dur">6~10주 · 2~3개 업무</div>
+        <div class="amt">500만<small>원부터</small></div><div class="dur">6~10주 · 2~3개 업무</div>
       </div>
       <div class="price">
         <div class="t">T3</div><h4>데이터 수집·검증</h4>
-        <div class="amt">+300만~600만<small>원</small></div><div class="dur">+2~4주 · T1·T2 추가</div>
+        <div class="amt">+300만<small>원부터</small></div><div class="dur">+2~4주 · T1·T2 추가</div>
       </div>
       <div class="price">
         <div class="t">T4</div><h4>사후 관리</h4>
-        <div class="amt">연 400만~800만<small>원</small></div><div class="dur">12개월 유지보수</div>
+        <div class="amt">연 400만<small>원부터</small></div><div class="dur">12개월 유지보수</div>
       </div>
     </div>
+    <p style="text-align:center;margin-top:24px;font-size:13.5px;color:var(--mute)">* 금액은 업무 범위·데이터 상태에 따라 상담 후 확정됩니다.</p>
   </div>
 </section>
 <!-- FAQ -->
