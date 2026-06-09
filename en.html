@@ -1,22 +1,21 @@
 <!DOCTYPE html>
 <!--
-  파일: maia-self-diagnosis.html
-  파일 버전: v1.2 (MAIA 방법론 v1.0 적용)
-  작성자: 안창한 · 한국폴리텍대학 대구캠퍼스 이차전지시스템과
+  File: maia-self-diagnosis-en.html (English edition)
+  File Version: v0.1-en (MAIA framework v1.0)
+  Author: Changhan Ahn · Korea Polytechnic University, Daegu Campus, Battery System Dept.
 
-  변경 이력:
-   - v1.2 (2026-06-03) 도입 업무 입력란에 예시 칩 8개 추가(서비스소개서 4분류 기반)
-                       + lockOverlay·blur 겹침 결함 수정(신청 완료 박스 불투명화)
-   - v1.1 (2026-05-30) Tally hidden 6필드 연동 + HTML 신청폼 폐기(중복 제거 정책)
-                       + ?src 단일 파라미터 우선 추출
-   - v1.0 (2026-05-29) 신설. 8문항 자가진단·MAIA archetype 8종·결과 카드·리포트 신청 게이트
+  Change Log:
+   - v0.1-en (2026-06-03) Initial English edition. Duplicated from Korean v1.2.
+                          UI strings translated. Tally form (Korean) shared for now;
+                          English intake form is planned.
+  See the Korean edition (maia-self-diagnosis.html) for original change history.
 -->
-<html lang="ko">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>MAIA 무료 자가진단 — 우리 회사 이 업무, AI로 바꿀 수 있을까?</title>
-<meta name="description" content="8개 질문 3분. AI 적용 가능성을 점수로 무료 진단합니다. MAIA v1.0" />
+<title>MAIA — Can AI handle this task at your company? Free self-diagnosis</title>
+<meta name="description" content="8 questions, 3 minutes. Score your AI applicability for free. MAIA v1.0." />
 <link rel="preconnect" href="https://cdn.jsdelivr.net" />
 <link rel="stylesheet" as="style" crossorigin
   href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
@@ -190,7 +189,7 @@
   .mode-row span{color:var(--gray);text-align:right;font-size:13px}
   .mode-row.on{background:#F0F6FC}
   .mode-row.on b{color:var(--blue)}
-  .mode-row.on::after{content:"← 지금 결과";color:var(--blue);font-size:11.5px;font-weight:700;white-space:nowrap}
+  .mode-row.on::after{content:"← your result";color:var(--blue);font-size:11.5px;font-weight:700;white-space:nowrap}
   .funnel-note{margin-top:16px;background:#F0F6FC;border:1px solid var(--lblue);border-radius:var(--radius);
     padding:18px 20px;font-size:14px;line-height:1.75;color:#334155;text-align:center}
   .funnel-note b{color:var(--navy)}
@@ -213,11 +212,11 @@
 <!-- ===== HERO ===== -->
 <header class="hero" id="hero">
   <div class="wrap">
-    <span class="badge">MAIA v1.0 · AI 적용 진단</span>
-    <h1>우리 회사 이 업무,<br><span class="accent">AI에게 맡길 수 있을까?</span></h1>
-    <p>8개 질문, 3분이면 됩니다. 이 일을 누가 맡으면 좋을지 알려드립니다.</p>
-    <p class="meta">한국폴리텍대학 대구캠퍼스 이차전지시스템과 · 안창한</p>
-    <button class="btn btn-primary" onclick="startQuiz()">진단 시작하기</button>
+    <span class="badge">MAIA v1.0 · AI Applicability Diagnosis</span>
+    <h1>This task at your company —<br><span class="accent">can AI take it over?</span></h1>
+    <p>8 questions, about 3 minutes. We tell you who should handle it: AI, AI+human, or a specialist.</p>
+    <p class="meta">Changhan Ahn · Korea Polytechnic University, Daegu Campus, Battery System Department</p>
+    <button class="btn btn-primary" onclick="startQuiz()">Start the diagnosis</button>
   </div>
 </header>
 
@@ -232,49 +231,49 @@
   <section>
     <div class="wrap">
       <div class="section-head">
-        <h2>진단할 업무 하나를 떠올려 주세요</h2>
-        <p>특정 반복 업무·공정 하나를 기준으로 답하면 정확합니다.</p>
+        <h2>Pick one task to diagnose</h2>
+        <p>Answer based on one specific, repetitive task or process — that keeps the score accurate.</p>
       </div>
       <div class="task-box">
-        <label for="taskInput">어떤 업무를 진단할까요?</label>
-        <input id="taskInput" type="text" placeholder="예: 매일 아침 생산실적을 엑셀에 정리하는 일" />
-        <p class="sub">한 줄로 적어 주세요. 결과를 이 업무에 맞춰 설명해 드립니다. (선택)</p>
+        <label for="taskInput">Which task do you want to diagnose?</label>
+        <input id="taskInput" type="text" placeholder="e.g. compiling each morning's production figures into a spreadsheet" />
+        <p class="sub">One short line. Results are tailored to this task. (Optional)</p>
         <div class="task-egs">
-          <p class="task-egs-title">막막하면, 비슷한 업무를 눌러 시작하세요 (누른 뒤 수정해도 됩니다)</p>
+          <p class="task-egs-title">Not sure? Tap a similar task to start (you can edit it after).</p>
           <div class="eg-group">
-            <div class="eg-group-label">설계·엔지니어링</div>
+            <div class="eg-group-label">Design & Engineering</div>
             <div class="eg-chips">
-              <span class="eg-chip" onclick="fillTask(this)">CAD 도면을 BOM 엑셀로 수기 이관</span>
-              <span class="eg-chip" onclick="fillTask(this)">PLC I/O·전장도면 매핑 수작업</span>
+              <span class="eg-chip" onclick="fillTask(this)">Copying CAD specs to a BOM sheet by hand</span>
+              <span class="eg-chip" onclick="fillTask(this)">Mapping PLC I/O & wiring diagrams manually</span>
             </div>
           </div>
           <div class="eg-group">
-            <div class="eg-group-label">현장 데이터·이상탐지</div>
+            <div class="eg-group-label">Field Data & Anomaly Detection</div>
             <div class="eg-chips">
-              <span class="eg-chip" onclick="fillTask(this)">설비·계측 데이터 이상 패턴 파악</span>
-              <span class="eg-chip" onclick="fillTask(this)">불량·품질 판정을 육안에 의존</span>
+              <span class="eg-chip" onclick="fillTask(this)">Spotting anomalies in equipment/sensor data</span>
+              <span class="eg-chip" onclick="fillTask(this)">Defect / quality judgment by eye</span>
             </div>
           </div>
           <div class="eg-group">
-            <div class="eg-group-label">실무 프로세스</div>
+            <div class="eg-group-label">Operations Workflow</div>
             <div class="eg-chips">
-              <span class="eg-chip" onclick="fillTask(this)">측정 데이터를 보고서에 중복 타이핑</span>
-              <span class="eg-chip" onclick="fillTask(this)">부서별 취합·정기 보고서 작성</span>
+              <span class="eg-chip" onclick="fillTask(this)">Re-typing measurement data into reports</span>
+              <span class="eg-chip" onclick="fillTask(this)">Compiling cross-team data into routine reports</span>
             </div>
           </div>
           <div class="eg-group">
-            <div class="eg-group-label">품질 표준화·기술 자산화</div>
+            <div class="eg-group-label">Quality Standardization & Know-how</div>
             <div class="eg-chips">
-              <span class="eg-chip" onclick="fillTask(this)">작업자 숙련도 차이로 품질 편차</span>
-              <span class="eg-chip" onclick="fillTask(this)">숙련자 노하우를 알고리즘으로 자산화</span>
+              <span class="eg-chip" onclick="fillTask(this)">Quality variance from operator skill gap</span>
+              <span class="eg-chip" onclick="fillTask(this)">Capturing veteran know-how as an algorithm</span>
             </div>
           </div>
         </div>
       </div>
       <form id="quizForm"></form>
       <div class="quiz-actions">
-        <button class="btn btn-cta" id="submitBtn" disabled onclick="calcResult()">결과 보기 →</button>
-        <p class="hint" id="quizHint">8개 문항에 모두 답해 주세요.</p>
+        <button class="btn btn-cta" id="submitBtn" disabled onclick="calcResult()">See result →</button>
+        <p class="hint" id="quizHint">Please answer all 8 questions.</p>
       </div>
     </div>
   </section>
@@ -285,158 +284,158 @@
   <section>
     <div class="wrap">
       <div class="section-head">
-        <h2>진단 리포트</h2>
-        <p>MAIA 8개 항목으로 "이 일을 누가 맡으면 좋을지"를 평가한 결과입니다.</p>
+        <h2>Diagnosis Result</h2>
+        <p>Eight MAIA dimensions assess "who should handle this work" for your task.</p>
       </div>
 
       <div class="result-card">
-        <div class="gauge-label">AI 적용 가능성</div>
+        <div class="gauge-label">AI Applicability</div>
         <div class="score-num"><span id="scoreVal">0.00</span><small> / 1.00</small></div>
         <div class="meter"><i id="meterFill"></i></div>
         <div class="grade" id="gradeBadge">—</div>
         <div class="verdict" id="verdictText">—</div>
         <div class="pnote" id="personalNote"></div>
         <div class="radar-box"><canvas id="radar" width="380" height="340"></canvas></div>
-        <details class="breakdown" id="breakdown"><summary>점수 계산 내역 보기</summary><div id="breakdownBody"></div></details>
+        <details class="breakdown" id="breakdown"><summary>See score breakdown</summary><div id="breakdownBody"></div></details>
         <textarea id="shareBox" class="hidden" readonly></textarea>
       </div>
 
-      <!-- 우리 개발 방식: 세 갈래를 쉽게 -->
+      <!-- Three ways we can build it -->
       <div class="modes">
-        <div class="modes-title">우리가 만들어 줄 수 있는 일인지, 세 갈래로</div>
-        <div class="mode-row" id="mode-ai"><b>🤖 AI로 개발</b><span>바로 만들 수 있어요 (사람은 확인만)</span></div>
-        <div class="mode-row" id="mode-co"><b>🤝 함께 개발</b><span>만들 수 있지만 시간·노력이 더 들어요</span></div>
-        <div class="mode-row" id="mode-hu"><b>🙋 전문가가 살펴볼 일</b><span>전문가 분석 후 개발 가능 여부 판단</span></div>
+        <div class="modes-title">Three ways this task can be built</div>
+        <div class="mode-row" id="mode-ai"><b>🤖 AI-built</b><span>Can be built straight through; humans just verify.</span></div>
+        <div class="mode-row" id="mode-co"><b>🤝 AI + Human</b><span>Buildable, but takes more time and care.</span></div>
+        <div class="mode-row" id="mode-hu"><b>🙋 Specialist review needed</b><span>A specialist must assess before we can decide buildability.</span></div>
       </div>
 
       <div class="funnel-note">
-        이 결과는 <b>8문항 기반의 1차 진단</b>입니다. 8문항이 담지 못하는 부분이 있어,
-        정식 진단에서는 업무를 더 잘게 나눠 <b>어디까지 개발 가능한지</b>를 확인합니다.
+        This is a <b>first-pass diagnosis based on 8 questions</b>.
+        A full diagnosis breaks the task into smaller pieces to determine <b>exactly how far it can be built</b>.
       </div>
 
-      <!-- 맞춤 PDF 리포트 (무료) -->
+      <!-- Custom PDF report (free) -->
       <div class="locked" id="lockedBox">
         <div class="blur">
           <ul>
-            <li>📍 어느 일을 왜 AI/사람이 맡아야 하는지 — 항목별 상세 해석</li>
-            <li>⚠️ 가장 먼저 손봐야 할 지점 우선순위</li>
-            <li>🗺️ 30일 개선 로드맵 (무엇부터, 어떻게)</li>
-            <li>📄 맞춤 PDF 리포트</li>
+            <li>📍 Why each task suits AI or a human — dimension-by-dimension reading</li>
+            <li>⚠️ Where to start: prioritized list of weak points</li>
+            <li>🗺️ 30-day improvement roadmap (what first, how)</li>
+            <li>📄 Tailored PDF report</li>
           </ul>
         </div>
         <div class="lock-overlay" id="lockOverlay">
           <div class="lock-ico">📄</div>
-          <h4>진단 리포트(PDF) 신청</h4>
-          <p>신청하면 항목별 해석·우선순위·단계별 로드맵을 담은 진단 리포트를 보내드립니다. 회사·연락처는 다음 화면에서 한 번만 적으면 됩니다.</p>
-          <button class="btn btn-cta" onclick="openLeadForm(event)">리포트 신청하기</button>
+          <h4>Request the diagnosis report (PDF)</h4>
+          <p>We'll send you a tailored report with per-dimension reading, priorities, and a step-by-step roadmap. You'll be asked for your company and contact info once on the next screen.</p>
+          <button class="btn btn-cta" onclick="openLeadForm(event)">Request the report</button>
         </div>
       </div>
 
-      <!-- 상담 CTA (견적은 상담에서 안내) -->
+      <!-- Consultation CTA (pricing discussed at consultation) -->
       <div class="section-head" style="margin-top:56px">
-        <h2>현장 적용 상담</h2>
-        <p>현장에 맞는 AI 적용 범위와 방법은 전문가가 진단합니다.</p>
+        <h2>On-site Application Consultation</h2>
+        <p>A specialist scopes how and where AI fits in your specific environment.</p>
       </div>
       <div class="cta-single">
         <div class="cta-card hi">
-          <span class="tier">전문가 상담</span>
-          <h4>현장 진단 · AI 적용 상담</h4>
+          <span class="tier">Specialist consultation</span>
+          <h4>On-site diagnosis · AI applicability consultation</h4>
           <ul>
-            <li>현장에 맞춘 MAIA 정식 진단</li>
-            <li>AI 적용 방안·PoC 설계</li>
-            <li>안전·법적 검토 포함</li>
+            <li>Full MAIA diagnosis tailored to your site</li>
+            <li>AI application scope · PoC design</li>
+            <li>Safety & legal review included</li>
           </ul>
-          <a class="btn btn-cta" href="#" onclick="cta('poc');return false;">상담 신청하기</a>
+          <a class="btn btn-cta" href="#" onclick="cta('poc');return false;">Request a consultation</a>
         </div>
       </div>
 
-      <div style="text-align:center"><span class="restart" onclick="restart()">↺ 다시 진단하기</span></div>
+      <div style="text-align:center"><span class="restart" onclick="restart()">↺ Restart diagnosis</span></div>
     </div>
   </section>
 </div>
 
 <footer>
-  MAIA v1.0 &nbsp;|&nbsp; 한국폴리텍대학 대구캠퍼스 이차전지시스템과 &nbsp;|&nbsp; 안창한 &nbsp;|&nbsp; 2026
+  MAIA v1.0 &nbsp;|&nbsp; Korea Polytechnic University, Daegu Campus, Battery System Dept. &nbsp;|&nbsp; Changhan Ahn &nbsp;|&nbsp; 2026
   <br>
-  <a id="privacyLink" href="privacy.html" style="color:var(--blue);text-decoration:none;font-weight:600">개인정보 처리방침</a>
+  <a id="privacyLink" href="privacy-en.html" style="color:var(--blue);text-decoration:none;font-weight:600">Privacy Policy</a>
   &nbsp;·&nbsp;
-  <a href="en.html" style="color:var(--blue);text-decoration:none;font-weight:600">English</a>
+  <a href="index.html" style="color:var(--blue);text-decoration:none;font-weight:600">한국어</a>
 </footer>
 
 <script>
 /* ── MAIA 8차원 정의 (가중치·채점은 generate_maia_tool.py SOT와 일치) ── */
 const DIMS = [
-  { code:"C1", name:"규칙·구조", weight:0.20,
-    q:"이 업무는 정해진 규칙·기준대로 하나요, 사람의 감·경험으로 하나요?",
-    hint:"정해진 양식·기준에 맞춰 처리할수록 AI에 유리합니다.",
+  { code:"C1", name:"Rules & Structure", weight:0.20,
+    q:"Is this task done by fixed rules and standards, or by human intuition and experience?",
+    hint:"The more it follows a defined form or standard, the better AI handles it.",
     opts:[
-      {l:"정해진 규칙 없이 사람의 감·경험으로 한다", s:0.0},
-      {l:"대체로 경험으로 하되 일부 기준·문서가 있다", s:0.3},
-      {l:"정해진 양식·기준·체크리스트대로 한다", s:0.6},
-      {l:"수식·코드·데이터 규칙으로 완전히 정해져 있다", s:0.9},
+      {l:"Done purely by human intuition / experience, no fixed rules", s:0.0},
+      {l:"Mostly experience, with some standards or documents", s:0.3},
+      {l:"Done by a defined form, standard, or checklist", s:0.6},
+      {l:"Fully defined by formulas, code, or data rules", s:0.9},
     ]},
-  { code:"C2", name:"정보 완전성", weight:0.15,
-    q:"이 일에 필요한 정보가 서류·파일·시스템 안에 다 들어 있나요?",
-    hint:"현장에 직접 가봐야 알 수 있는 정보가 많을수록 낮습니다.",
+  { code:"C2", name:"Information Completeness", weight:0.15,
+    q:"Is all the information this task needs already in documents, files, or systems?",
+    hint:"The more information requires going to the physical site, the lower this scores.",
     opts:[
-      {l:"현장에 가야만 알 수 있는 게 많다", s:0.0},
-      {l:"일부는 시스템에, 일부는 현장 확인이 필요하다", s:0.4},
-      {l:"대부분 서류·화면으로 확인된다", s:0.7},
-      {l:"모든 정보가 파일·시스템에 디지털로 있다", s:1.0},
+      {l:"Much of it can only be known on-site", s:0.0},
+      {l:"Part in systems, part needs on-site verification", s:0.4},
+      {l:"Mostly verifiable through documents / screens", s:0.7},
+      {l:"All information lives digitally in files / systems", s:1.0},
     ]},
-  { code:"C3", name:"보편성", weight:0.20,
-    q:"이 업무는 다른 회사·부서에서도 흔히 하는 일인가요?",
-    hint:"흔한 일일수록 AI가 참고·학습할 사례가 많습니다.",
+  { code:"C3", name:"Commonality", weight:0.20,
+    q:"Is this task commonly done at other companies or departments?",
+    hint:"The more common it is, the more examples AI has to learn from.",
     opts:[
-      {l:"우리 회사만의 아주 특수한 일이다", s:0.0},
-      {l:"업계에서 가끔 보이는 일이다", s:0.3},
-      {l:"같은 업종이면 대부분 하는 일이다", s:0.6},
-      {l:"업종 불문 어디서나 하는 표준 업무다", s:0.8},
+      {l:"Highly specific to our company", s:0.0},
+      {l:"Occasionally seen in the industry", s:0.3},
+      {l:"Most companies in the same industry do it", s:0.6},
+      {l:"A standard task done everywhere across industries", s:0.8},
     ]},
-  { code:"C4", name:"디지털화", weight:0.15,
-    q:"이 업무는 주로 무엇으로 하나요?",
-    hint:"이미 컴퓨터·시스템으로 할수록 AI가 이어받기 쉽습니다.",
+  { code:"C4", name:"Digital Footprint", weight:0.15,
+    q:"What is this task mostly done with?",
+    hint:"The more it already runs on computers / systems, the easier AI can pick it up.",
     opts:[
-      {l:"몸으로 하는 현장 작업이다 (손·기계)", s:0.0},
-      {l:"종이·전화·대면 위주로 한다", s:0.3},
-      {l:"컴퓨터 프로그램으로 한다 (엑셀·사내 시스템 등)", s:0.6},
-      {l:"여러 시스템을 오가며 디지털로만 한다", s:0.9},
+      {l:"Physical work on-site (hands / machines)", s:0.0},
+      {l:"Mostly paper, phone, or face-to-face", s:0.3},
+      {l:"Computer programs (Excel, internal systems, etc.)", s:0.6},
+      {l:"Across multiple digital systems only", s:0.9},
     ]},
-  { code:"C5", name:"결과 검증", weight:0.10,
-    q:"결과가 맞는지 어떻게 확인하나요?",
-    hint:"시스템이 자동으로 걸러줄수록 AI에 유리합니다.",
+  { code:"C5", name:"Result Verification", weight:0.10,
+    q:"How is the correctness of the result checked?",
+    hint:"The more a system can auto-filter results, the more AI-friendly it is.",
     opts:[
-      {l:"현장에서 직접 물건·설비를 봐야 안다", s:0.0},
-      {l:"담당자가 눈으로 일일이 검토한다", s:0.3},
-      {l:"일부는 숫자·시스템이 자동으로 걸러준다", s:0.6},
-      {l:"시스템이 맞는지 자동으로 검증해준다", s:0.9},
+      {l:"Must inspect the physical thing / equipment on-site", s:0.0},
+      {l:"A person manually reviews every item by eye", s:0.3},
+      {l:"Some auto-filtering by numbers / systems", s:0.6},
+      {l:"A system automatically verifies correctness", s:0.9},
     ]},
-  { code:"C6", name:"오류 영향", weight:0.10,
-    q:"이 업무에서 실수가 나면 어떤 일이 벌어지나요?",
-    hint:"실수의 파장이 클수록 사람의 손이 더 필요합니다.",
+  { code:"C6", name:"Error Impact", weight:0.10,
+    q:"What happens if a mistake is made in this task?",
+    hint:"The bigger the consequence, the more human hands you need.",
     opts:[
-      {l:"안전사고·설비 파손으로 이어진다", s:0.0},
-      {l:"서비스 중단·고객 피해가 생긴다", s:0.3},
-      {l:"재작업이 필요하다 (안전과는 무관)", s:0.6},
-      {l:"거의 무해하고 금방 바로잡는다", s:0.9},
+      {l:"Could cause a safety incident or equipment damage", s:0.0},
+      {l:"Causes service disruption or customer harm", s:0.3},
+      {l:"Requires rework (no safety implications)", s:0.6},
+      {l:"Nearly harmless, easily corrected", s:0.9},
     ]},
-  { code:"C7", name:"물리 의존성", weight:0.05, invert:true, gate:true,
-    q:"사람이 직접 손으로 다뤄야 하는 물리 작업이 있나요?",
-    hint:"컴퓨터 입력·클릭·마우스 조작은 '물리 작업'이 아닙니다(자동화 대상). 부품 조립·배선·운반처럼 실제로 손을 써야 하는 것만 해당.",
+  { code:"C7", name:"Physical Dependence", weight:0.05, invert:true, gate:true,
+    q:"Does the task require physical work that humans must do by hand?",
+    hint:"Typing on a computer, clicking, or moving a mouse is NOT 'physical work' (those are automation targets). Only count things like assembly, wiring, transport — work that genuinely needs human hands.",
     opts:[
-      {l:"없다 — 컴퓨터·서류상으로만 이뤄진다", s:0.0},
-      {l:"가끔 현장에서 물건·설비를 직접 확인·조작해야 한다", s:0.4},
-      {l:"상당 부분 사람이 직접 다뤄야 한다", s:0.7},
-      {l:"대부분 사람 손 작업이다 (조립·배선·운반·계측 등)", s:1.0},
+      {l:"None — only happens on computers / paper", s:0.0},
+      {l:"Occasionally need to physically inspect or operate something on-site", s:0.4},
+      {l:"A significant portion must be done by hand", s:0.7},
+      {l:"Mostly hands-on work (assembly, wiring, transport, measurement, etc.)", s:1.0},
     ]},
-  { code:"C8", name:"안전·법적 판단", weight:0.05, invert:true, gate:true,
-    q:"이 업무 결과에 법적·안전상의 책임 판단이 필요한가요?",
-    hint:"내용을 한 번 보고 넘기는 '단순 검토·컨펌'은 책임 판단이 아닙니다. 서명·인허가처럼 사람이 법적 책임을 지는 것만 해당.",
+  { code:"C8", name:"Safety / Legal Judgment", weight:0.05, invert:true, gate:true,
+    q:"Does the result of this task require legal or safety-level accountability?",
+    hint:"Routinely looking something over and confirming it ('check & OK') is NOT accountability. Only count things like signatures or permits where a human takes formal legal responsibility.",
     opts:[
-      {l:"필요 없다 — 일반 사무 결과물이다", s:0.0},
-      {l:"AI가 만들고 사람이 검토·컨펌하면 된다", s:0.3},
-      {l:"법적·안전상 사람의 공식 승인이 꼭 필요하다", s:0.7},
-      {l:"사람이 법적·안전 책임을 단독 판단해야 한다 (서명 등)", s:1.0},
+      {l:"Not required — ordinary office output", s:0.0},
+      {l:"AI generates, a human reviews and confirms", s:0.3},
+      {l:"Formal human approval is legally / safety-wise required", s:0.7},
+      {l:"A human must independently bear legal / safety responsibility (e.g. signature)", s:1.0},
     ]},
 ];
 
@@ -453,8 +452,8 @@ const answerIdx = new Array(DIMS.length).fill(null);
                       비워두면 leadFormAction으로 폴백(시간 조율은 수동)
    진단 점수·등급은 폼 URL에 자동으로 붙어 리드 기록에 함께 저장된다. */
 const CONFIG = {
-  // 발행 모드(2026-06-09): leadEnabled=true → 리드 수집 퍼널 ON(개인 명의 처리방침 v1.0 적용).
-  // 공개 전제: Tally 필수/선택 2단 동의 설정 완료. false로 바꾸면 진단만(개인정보 0) 모드로 전환.
+  // Launch mode (2026-06-09): leadEnabled=true → lead funnel ON (personal-name privacy policy v1.0).
+  // Release prerequisite: Tally required/optional consent split configured. Set false for diagnosis-only (zero PII).
   leadEnabled:     true,
   operatorEmail:   "chahn@kopo.ac.kr",  // Tally 없이 신청 받을 주소(폴백). 신청자 메일앱으로 발송됨
   leadFormAction:  "https://tally.so/r/A7y8Xo",   // Tally 단일 통합 폼 (2026-05-30 연결). 점수·등급·업무 자동 전달
@@ -530,7 +529,7 @@ function updateProgress(){
   const ready=done===DIMS.length;
   document.getElementById('submitBtn').disabled=!ready;
   document.getElementById('quizHint').textContent=
-    ready?'모두 답했습니다. 결과를 확인하세요.':`${DIMS.length-done}개 문항이 남았습니다.`;
+    ready?'All answered. Check your result.':`${DIMS.length-done} question(s) remaining.`;
 }
 
 function startQuiz(){
@@ -560,36 +559,36 @@ function calcResult(){
    AI 단독=무조건 개발 가능 / 협업=개발 가능하나 노력↑ / 사람 단독=설문상 어려움(상담서 확정)
    ※ 설문이 모든 걸 담지 못하므로 어떤 결과든 리포트+상담으로 확정한다(막다른 길 금지). */
 function gradeOf(score, gated){
-  if(gated) return {label:"🙋 전문가가 살펴봐야 할 일이에요", cls:"red", mode:"전문가 분석 후 개발 가능 여부 판단",
-    verdict:"설문상으로는 전문가 진단이 필요한 일로 보입니다. 8문항이 모든 상황을 담지는 못합니다. 손작업·안전 책임 주변 업무는 AI로 도울 여지가 있고, 정식 진단에서 확인합니다."};
-  if(score>=0.75) return {label:"🤖 AI로 개발할 수 있어요", cls:"green", mode:"AI 단독 · 개발 가능",
-    verdict:"AI가 맡아 처리할 수 있는 일입니다. 바로 시작할 수 있고, 사람은 확인만 하면 됩니다. 시작 방법은 정식 진단에서 정합니다."};
-  if(score>=0.50) return {label:"🤝 AI와 사람이 함께라면 개발할 수 있어요", cls:"yellow", mode:"사람·AI 협업 · 개발 가능",
-    verdict:"개발할 수 있는 일입니다. 어디까지 AI가 맡고 어디부터 사람이 확인할지는 정식 진단에서 정합니다."};
-  return {label:"🙋 전문가가 살펴봐야 할 일이에요", cls:"red", mode:"전문가 분석 후 개발 가능 여부 판단",
-    verdict:"설문상으로는 사람의 손이 큰 영역으로 보입니다. 8문항이 담지 못한 부분이 있어, 업무를 정리하면 '함께 개발'로 올라갈 수 있습니다. 정식 진단에서 확인합니다."};
+  if(gated) return {label:"🙋 Specialist review needed", cls:"red", mode:"Specialist must assess before deciding buildability",
+    verdict:"From the survey, this looks like work that needs a specialist's look. Eight questions can't capture every situation. Around hands-on or safety-accountable tasks, there's still room for AI to help — the full diagnosis confirms what's feasible."};
+  if(score>=0.75) return {label:"🤖 AI-built — feasible", cls:"green", mode:"AI alone · feasible",
+    verdict:"This is work AI can take over. It can start immediately; humans just verify. The starting approach is set in the full diagnosis."};
+  if(score>=0.50) return {label:"🤝 AI + human — feasible", cls:"yellow", mode:"AI + human · feasible",
+    verdict:"This is buildable. How much AI handles and where humans verify is set in the full diagnosis."};
+  return {label:"🙋 Specialist review needed", cls:"red", mode:"Specialist must assess before deciding buildability",
+    verdict:"From the survey, this leans heavily on human hands. Eight questions don't capture everything — once the task is broken down, it may move up to 'AI + human'. The full diagnosis confirms."};
 }
 
 /* ── 차원별 사용자 언어 이유 (맞춤 설명용) ── */
-const REASON_LOW = {  // 점수가 낮을 때 = AI 도입을 막는 요인
-  C1:"정해진 규칙 없이 사람의 감으로 하는 점",
-  C2:"현장에 가야만 알 수 있는 정보가 많은 점",
-  C3:"우리 회사만의 특수한 일이라는 점",
-  C4:"컴퓨터가 아니라 현장·종이로 처리하는 점",
-  C5:"결과가 맞는지 사람이 직접 확인해야 하는 점",
-  C6:"실수가 큰 사고로 이어질 수 있는 점",
-  C7:"사람 손이 꼭 필요한 작업인 점",
-  C8:"사람이 직접 책임지고 판단해야 하는 점",
+const REASON_LOW = {  // Low score = blockers for AI adoption
+  C1:"Relies on human intuition without fixed rules",
+  C2:"Much information is only available on-site",
+  C3:"Highly specific to your company",
+  C4:"Handled mostly on paper / in person, not on computer",
+  C5:"Correctness must be verified by a human",
+  C6:"Mistakes could lead to serious incidents",
+  C7:"Requires hands-on physical work",
+  C8:"A human must take legal / safety responsibility",
 };
-const REASON_HIGH = { // 점수가 높을 때 = AI에 유리한 요인
-  C1:"업무가 규칙·문서로 잘 정리돼 있는 점",
-  C2:"필요한 정보를 화면으로 다 볼 수 있는 점",
-  C3:"어디서나 하는 보편적인 일이라는 점",
-  C4:"이미 컴퓨터·시스템으로 하고 있는 점",
-  C5:"결과를 시스템이 자동으로 확인해 주는 점",
-  C6:"실수가 나도 크게 위험하지 않은 점",
-  C7:"손으로 하는 작업이 거의 없는 점",
-  C8:"안전·법적 판단 부담이 적은 점",
+const REASON_HIGH = { // High score = enablers for AI
+  C1:"Task is well-defined by rules and documents",
+  C2:"All needed information is visible on a screen",
+  C3:"A common task done broadly across industries",
+  C4:"Already runs on computers / systems",
+  C5:"A system automatically verifies the result",
+  C6:"Mistakes are not particularly dangerous",
+  C7:"Little to no hands-on physical work",
+  C8:"Low legal / safety judgment burden",
 };
 
 /* 신청자 입력(업무명 + 답변)을 되짚는 맞춤 문장 생성 */
@@ -600,14 +599,14 @@ function personalNote(){
   const strong = [...eff].sort((a,b)=>b.v-a.v).filter(x=>x.v>=0.6).slice(0,2);
 
   let html = task
-    ? `<div class="pn-task">📋 입력하신 <b>'${task}'</b></div>`
-    : `<div class="pn-task">📋 답변을 종합하면</div>`;
+    ? `<div class="pn-task">📋 You entered <b>'${task}'</b></div>`
+    : `<div class="pn-task">📋 Taken together, your answers show</div>`;
   if(weak.length){
-    html += `<div class="pn-group"><div class="pn-label">전문가 진단이 필요한 점</div><ul>`
+    html += `<div class="pn-group"><div class="pn-label">Where specialist diagnosis is needed</div><ul>`
           + weak.map(w=>`<li>${REASON_LOW[w.code]}</li>`).join('') + `</ul></div>`;
   }
   if(strong.length){
-    html += `<div class="pn-group"><div class="pn-label pn-good">이미 갖춘 강점</div><ul>`
+    html += `<div class="pn-group"><div class="pn-label pn-good">Strengths already in place</div><ul>`
           + strong.map(s=>`<li>${REASON_HIGH[s.code]}</li>`).join('') + `</ul></div>`;
   }
   return html;
@@ -654,12 +653,12 @@ function showResult(score, gated){
 function buildBreakdown(score, gated, g){
   const task=(document.getElementById('taskInput')?.value||'').trim();
   let rows='', txt=[];
-  txt.push('── MAIA 진단 결과 ──');
-  if(task) txt.push('업무: '+task);
-  txt.push('판정: '+g.label+'  ('+g.mode+')');
-  txt.push('AI 적용 가능성: '+(gated?'하드게이트(점수 무시)':score.toFixed(3)));
+  txt.push('── MAIA Diagnosis Result ──');
+  if(task) txt.push('Task: '+task);
+  txt.push('Verdict: '+g.label+'  ('+g.mode+')');
+  txt.push('AI Applicability: '+(gated?'Hard-gate (score ignored)':score.toFixed(3)));
   txt.push('');
-  txt.push('[항목별 답변·점수]');
+  txt.push('[Per-dimension answers · scores]');
   DIMS.forEach((d,i)=>{
     const idx=answerIdx[i];
     const ansLabel = idx!=null ? d.opts[idx].l : '—';
@@ -670,17 +669,17 @@ function buildBreakdown(score, gated, g){
     rows += `<tr><td><b>${d.code}</b> ${d.name}</td><td>${ansLabel}</td>`
           + `<td class="num">${note}</td><td class="num">×${d.weight.toFixed(2)}</td>`
           + `<td class="num">${contrib.toFixed(3)}</td></tr>`;
-    txt.push(`${d.code} ${d.name}: "${ansLabel}" → 값 ${note} ×${d.weight.toFixed(2)} = ${contrib.toFixed(3)}`);
+    txt.push(`${d.code} ${d.name}: "${ansLabel}" → value ${note} ×${d.weight.toFixed(2)} = ${contrib.toFixed(3)}`);
   });
   const totalRow = gated
-    ? `<tr class="bd-total"><td colspan="4">합계 (하드게이트 발동)</td><td class="num">—</td></tr>`
-    : `<tr class="bd-total"><td colspan="4">합계</td><td class="num">${score.toFixed(3)}</td></tr>`;
+    ? `<tr class="bd-total"><td colspan="4">Total (hard-gate triggered)</td><td class="num">—</td></tr>`
+    : `<tr class="bd-total"><td colspan="4">Total</td><td class="num">${score.toFixed(3)}</td></tr>`;
   document.getElementById('breakdownBody').innerHTML =
-    `<table class="bd-table"><thead><tr><th>항목</th><th>선택한 답변</th><th>값</th><th>가중치</th><th>기여</th></tr></thead>`
+    `<table class="bd-table"><thead><tr><th>Dimension</th><th>Your answer</th><th>Value</th><th>Weight</th><th>Contribution</th></tr></thead>`
     + `<tbody>${rows}${totalRow}</tbody></table>`
-    + `<p style="font-size:12px;color:var(--gray);padding:10px 14px">C7·C8은 "역전" 항목: 입력값이 높을수록 점수에 불리(값=1−입력). 입력이 최댓값이면 하드게이트로 사람 단독 강제.</p>`;
+    + `<p style="font-size:12px;color:var(--gray);padding:10px 14px">C7 and C8 are inverted: the higher the input, the worse the score (value = 1 − input). At the maximum input, a hard-gate forces a "specialist-only" verdict.</p>`;
   txt.push('');
-  txt.push('판정 기준: ≥0.75 AI / 0.50~0.74 협업 / <0.50 사람 / C7·C8 최댓값=사람(하드게이트)');
+  txt.push('Thresholds: ≥0.75 AI / 0.50–0.74 AI+human / <0.50 human / C7·C8 max = hard-gate');
   document.getElementById('shareBox').value = txt.join('\n');
 }
 
@@ -744,21 +743,21 @@ function drawRadar(){
    회사·이메일·연락처는 Tally에서 한 번만 입력(HTML에서 또 묻지 않음 — 중복 입력 방지). */
 function openLeadForm(e){
   if(e) e.preventDefault();
-  if(!CONFIG.leadEnabled){ setLockClosed(); return false; }   // 1단계: 개인정보 수집(Tally) 비활성
+  if(!CONFIG.leadEnabled){ setLockClosed(); return false; }   // step 1: personal-data (Tally) disabled
   if(CONFIG.leadFormAction){
     window.open(withResult(CONFIG.leadFormAction, 'lead'), '_blank');
   } else if(CONFIG.operatorEmail){
     // 폴백: Tally 미설정 시 운영자 메일로 진단 요약 발송. 회사·연락처는 본문에 직접 작성.
-    const subject='[진단 리포트 신청]';
-    const body='진단 결과입니다. 회사/기관 · 이메일 · 연락처를 적어 회신해 주세요.\n\n'
+    const subject='[MAIA Report Request]';
+    const body='Here is the diagnosis result. Please reply with your company, email, and phone number.\n\n'
       +(document.getElementById('shareBox')?.value||'');
     window.location.href='mailto:'+CONFIG.operatorEmail
       +'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
   }
   try{ localStorage.setItem('maia_lead', JSON.stringify({result:lastResult,at:Date.now(),src:location.search})); }catch(_){}
   const ov=document.getElementById('lockOverlay');
-  ov.innerHTML=`<div class="lock-ico">✅</div><h4>신청 화면이 열렸어요</h4>
-    <p>새 탭에서 연락처를 한 번만 입력하고 제출하면, 진단 리포트를 보내드립니다.</p>`;
+  ov.innerHTML=`<div class="lock-ico">✅</div><h4>The intake form is open</h4>
+    <p>Please fill in your contact info once on the new tab and submit — we'll send the diagnosis report. (The intake form is currently in Korean; English form coming soon.)</p>`;
   // 신청 완료: overlay를 불투명 처리해 뒤 미리보기(blur)와 글자가 겹치지 않게 한다.
   ov.style.background='rgba(255,255,255,.97)';
   return false;
@@ -772,16 +771,16 @@ function copyResult(){
   let ok=false;
   try{ ok=document.execCommand('copy'); }catch(_){}
   if(navigator.clipboard){ try{ navigator.clipboard.writeText(box.value); }catch(_){} }
-  alert(ok ? '결과가 복사됐어요. 채팅에 붙여넣어 주세요.'
-           : '아래 상자 내용을 전체 선택(Ctrl+A) 후 복사해 붙여넣어 주세요.');
+  alert(ok ? 'Result copied. Paste it wherever you like.'
+           : 'Please select all (Ctrl+A) in the box below and copy manually.');
 }
 
 /* ── 전환 CTA ──
    전용 URL(detailReportUrl·pocBookingUrl)이 있으면 그것을, 없으면 leadFormAction
    단일 통합 폼을 재사용한다(중복 폼 금지). 어느 버튼에서 왔는지는 kind로 구분한다. */
 function cta(kind){
-  if(!CONFIG.leadEnabled){   // 1단계: 상담 신청도 Tally(개인정보 수집)이므로 차단
-    alert('지금은 무료 진단만 운영 중입니다. 상담·상세 리포트 문의는 chahn@kopo.ac.kr 로 보내 주세요.');
+  if(!CONFIG.leadEnabled){   // step 1: consultation request also posts to Tally (personal data) — blocked
+    alert('Free diagnosis only for now. For consultation or the detailed report, please email chahn@kopo.ac.kr');
     return;
   }
   const url = (kind==='poc' ? CONFIG.pocBookingUrl : CONFIG.detailReportUrl)
@@ -791,8 +790,8 @@ function cta(kind){
     return;
   }
   alert(kind==='poc'
-    ? '현장 정식진단·PoC 상담 예약 링크 준비 중입니다.'
-    : '공정별 상세 리포트 신청 링크 준비 중입니다.');
+    ? 'On-site diagnosis / PoC consultation booking link is coming soon.'
+    : 'Detailed per-process report request link is coming soon.');
 }
 
 function restart(){
@@ -805,27 +804,27 @@ function restart(){
   document.getElementById('quizWrap').classList.remove('hidden');
   // 무료 PDF 게이트 초기화
   const ov=document.getElementById('lockOverlay');
-  ov.innerHTML=`<div class="lock-ico">📄</div><h4>진단 리포트(PDF) 신청</h4>
-    <p>신청하면 항목별 해석·우선순위·단계별 로드맵을 담은 진단 리포트를 보내드립니다. 회사·연락처는 다음 화면에서 한 번만 적으면 됩니다.</p>
-    <button class="btn btn-cta" onclick="openLeadForm(event)">리포트 신청하기</button>`;
+  ov.innerHTML=`<div class="lock-ico">📄</div><h4>Request the diagnosis report (PDF)</h4>
+    <p>We'll send you a tailored report with per-dimension reading, priorities, and a step-by-step roadmap. You'll be asked for your company and contact info once on the next screen.</p>
+    <button class="btn btn-cta" onclick="openLeadForm(event)">Request the report</button>`;
   ov.style.background='';  // overlay 반투명 원복
-  if(!CONFIG.leadEnabled) setLockClosed();   // 1단계: 신청 버튼 대신 안내 유지
+  if(!CONFIG.leadEnabled) setLockClosed();   // step 1: keep notice instead of request button
   window.scrollTo(0,0);
 }
 
-/* ── 2단계 발행 게이트 (개인정보 수집 on/off) ──
-   leadEnabled=false면 Tally(개인정보) UI를 비활성화하고 진단만 노출. true 전환 시 복원. */
+/* ── 2-step launch gate (personal-data collection on/off) ──
+   leadEnabled=false disables the Tally (personal-data) UI and shows diagnosis only. */
 function setLockClosed(){
   const ov=document.getElementById('lockOverlay');
   if(!ov) return;
-  ov.innerHTML=`<div class="lock-ico">🔧</div><h4>상세 리포트는 곧 열립니다</h4>`
-    +`<p>지금은 무료 진단만 운영 중입니다. 상세 리포트·상담 문의는 <b>chahn@kopo.ac.kr</b> 로 보내 주세요.</p>`;
+  ov.innerHTML=`<div class="lock-ico">🔧</div><h4>The detailed report is coming soon</h4>`
+    +`<p>Only the free diagnosis is running for now. For the detailed report or consultation, email <b>chahn@kopo.ac.kr</b>.</p>`;
   ov.style.background='rgba(255,255,255,.97)';
 }
 function applyLeadGate(){
   if(CONFIG.leadEnabled) return;
   const pl=document.getElementById('privacyLink');
-  if(pl) pl.outerHTML='<span style="color:var(--gray)">이 진단은 개인정보를 수집하지 않습니다 · 점수는 브라우저에서 계산됩니다</span>';
+  if(pl) pl.outerHTML='<span style="color:var(--gray)">This diagnosis collects no personal data · scoring runs in your browser</span>';
   setLockClosed();
 }
 

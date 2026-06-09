@@ -1,22 +1,10 @@
 <!DOCTYPE html>
-<!--
-  파일: maia-self-diagnosis.html
-  파일 버전: v1.2 (MAIA 방법론 v1.0 적용)
-  작성자: 안창한 · 한국폴리텍대학 대구캠퍼스 이차전지시스템과
-
-  변경 이력:
-   - v1.2 (2026-06-03) 도입 업무 입력란에 예시 칩 8개 추가(서비스소개서 4분류 기반)
-                       + lockOverlay·blur 겹침 결함 수정(신청 완료 박스 불투명화)
-   - v1.1 (2026-05-30) Tally hidden 6필드 연동 + HTML 신청폼 폐기(중복 제거 정책)
-                       + ?src 단일 파라미터 우선 추출
-   - v1.0 (2026-05-29) 신설. 8문항 자가진단·MAIA archetype 8종·결과 카드·리포트 신청 게이트
--->
 <html lang="ko">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>MAIA 무료 자가진단 — 우리 회사 이 업무, AI로 바꿀 수 있을까?</title>
-<meta name="description" content="8개 질문 3분. AI 적용 가능성을 점수로 무료 진단합니다. MAIA v1.0" />
+<title>MAIA 제조AI 진단 — 우리 공장, 어떤 유형·어떤 AI로 시작할까? (스마트공장 구축지원사업 대비)</title>
+<meta name="description" content="제조AI특화 스마트공장 구축지원사업 대비 무료 진단. 데이터 수집·검증/AI공장 구축 유형 판정 + 공정별 AI기능 추천 + 사업계획서 문장까지. MAIA v1.0" />
 <link rel="preconnect" href="https://cdn.jsdelivr.net" />
 <link rel="stylesheet" as="style" crossorigin
   href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
@@ -120,16 +108,6 @@
     font-size:15.5px;font-family:inherit}
   .task-box input:focus{outline:none;border-color:var(--blue)}
   .task-box .sub{font-size:12.5px;color:var(--gray);margin-top:6px}
-  /* 진단 업무 예시 칩 (서비스소개서 4분류 기반) — 빈 입력란 인지부담·1차 이탈 완화 */
-  .task-egs{margin-top:16px}
-  .task-egs-title{font-size:12.5px;color:var(--gray);margin-bottom:11px}
-  .eg-group{margin-bottom:11px}
-  .eg-group-label{font-size:11.5px;font-weight:700;color:var(--blue);margin-bottom:6px;letter-spacing:.02em}
-  .eg-chips{display:flex;flex-wrap:wrap;gap:7px}
-  .eg-chip{font-size:12.5px;color:var(--navy);background:#F4F7FB;border:1px solid var(--line);
-    border-radius:999px;padding:7px 13px;cursor:pointer;transition:border-color .12s,background .12s,transform .08s;line-height:1.3}
-  .eg-chip:hover{border-color:var(--blue);background:#EAF1FB}
-  .eg-chip:active{transform:scale(.97)}
   .radar-box{margin:34px auto 0;display:flex;justify-content:center}
   canvas{max-width:100%}
 
@@ -195,6 +173,47 @@
     padding:18px 20px;font-size:14px;line-height:1.75;color:#334155;text-align:center}
   .funnel-note b{color:var(--navy)}
 
+  /* 제조AI: 유형·매트릭스·추진절차 */
+  .biz{margin-top:28px;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+  .biz-head{background:var(--navy);color:#fff;padding:16px 20px}
+  .biz-head .k{font-size:12px;letter-spacing:.04em;color:#9FB6D6;font-weight:600}
+  .biz-head .v{font-size:21px;font-weight:800;margin-top:3px}
+  .biz-head .v small{font-size:13px;font-weight:600;color:#BDD7EE;margin-left:8px}
+  .biz-body{padding:20px}
+  .biz-row{display:flex;gap:12px;padding:12px 0;border-bottom:1px dashed var(--line);font-size:14.5px}
+  .biz-row:last-child{border-bottom:none}
+  .biz-row .lab{flex:none;width:118px;color:var(--gray);font-weight:700}
+  .biz-row .val{color:var(--ink)}
+  .biz-row .val b{color:var(--navy)}
+  .chip{display:inline-block;font-size:12.5px;font-weight:700;border-radius:8px;padding:3px 10px;
+    background:var(--lblue);color:var(--navy)}
+  .chip.auto{background:var(--green-bg);color:var(--green-fg)}
+  .chip.semi{background:var(--yellow-bg);color:var(--yellow-fg)}
+  .chip.manual{background:var(--red-bg);color:var(--red-fg)}
+  .plan-box{margin-top:14px;background:#F0F6FC;border:1px solid var(--lblue);border-radius:12px;padding:16px 18px}
+  .plan-box .pl-lab{font-size:12.5px;font-weight:700;color:var(--blue);margin-bottom:7px}
+  .plan-box .pl-txt{font-size:14.5px;color:#1f2d44;line-height:1.75}
+  .plan-box .pl-copy{margin-top:10px;font-size:12.5px;color:var(--blue);cursor:pointer;
+    text-decoration:underline;font-weight:600;display:inline-block}
+  /* 추진절차 스트립 */
+  .stagebar{margin-top:24px;border:1px solid var(--line);border-radius:var(--radius);padding:18px 16px}
+  .stagebar .sb-title{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:14px;text-align:center}
+  .sb-flow{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;align-items:stretch}
+  .sb-step{position:relative;flex:1 1 0;min-width:62px;max-width:110px;border:1px solid var(--line);
+    border-radius:10px;padding:8px 6px;text-align:center;background:#fff;font-size:11.5px;color:var(--gray)}
+  .sb-step b{display:block;font-size:11px;color:var(--ink);font-weight:700;line-height:1.3;margin-top:2px}
+  .sb-step.maia{border-color:var(--blue);background:#F0F6FC}
+  .sb-step.maia b{color:var(--blue)}
+  .sb-step.dt{border-color:#36A85B;background:#EAF7EE}
+  .sb-step.dt b{color:var(--green-fg)}
+  .sb-step .tag{position:absolute;top:-9px;left:50%;transform:translateX(-50%);font-size:9.5px;
+    font-weight:800;padding:1px 7px;border-radius:999px;white-space:nowrap}
+  .sb-step.maia .tag{background:var(--blue);color:#fff}
+  .sb-step.dt .tag{background:#36A85B;color:#fff}
+  .sb-legend{margin-top:12px;font-size:12px;color:var(--gray);text-align:center;line-height:1.7}
+  .sb-legend b{color:var(--navy)}
+  @media(max-width:560px){ .sb-step{min-width:0;flex:1 1 28%;font-size:10.5px} }
+
   footer{background:var(--soft);border-top:1px solid var(--line);padding:30px 0;text-align:center;
     font-size:12.5px;color:var(--gray)}
   .restart{display:inline-block;margin-top:18px;color:var(--blue);font-size:14px;cursor:pointer;
@@ -213,9 +232,9 @@
 <!-- ===== HERO ===== -->
 <header class="hero" id="hero">
   <div class="wrap">
-    <span class="badge">MAIA v1.0 · AI 적용 진단</span>
-    <h1>우리 회사 이 업무,<br><span class="accent">AI에게 맡길 수 있을까?</span></h1>
-    <p>8개 질문, 3분이면 됩니다. 이 일을 누가 맡으면 좋을지 알려드립니다.</p>
+    <span class="badge">MAIA v1.0 · 제조AI특화 스마트공장 구축지원사업 대비</span>
+    <h1>우리 공장, 어떤 유형·<br><span class="accent">어떤 AI로 시작할까?</span></h1>
+    <p>공정 1개 + 8개 질문, 3분. <b>데이터 수집·검증 / AI공장 구축</b> 중 어느 유형인지, 어느 공정에 어떤 AI를 적용할지 알려드립니다.</p>
     <p class="meta">한국폴리텍대학 대구캠퍼스 이차전지시스템과 · 안창한</p>
     <button class="btn btn-primary" onclick="startQuiz()">진단 시작하기</button>
   </div>
@@ -232,44 +251,16 @@
   <section>
     <div class="wrap">
       <div class="section-head">
-        <h2>진단할 업무 하나를 떠올려 주세요</h2>
-        <p>특정 반복 업무·공정 하나를 기준으로 답하면 정확합니다.</p>
+        <h2>개선하려는 공정·업무를 정해 주세요</h2>
+        <p>특정 공정·반복 업무 하나를 기준으로 답하면 정확합니다.</p>
       </div>
       <div class="task-box">
-        <label for="taskInput">어떤 업무를 진단할까요?</label>
-        <input id="taskInput" type="text" placeholder="예: 매일 아침 생산실적을 엑셀에 정리하는 일" />
+        <label for="procSelect">어느 공정을 개선하고 싶으신가요? <span style="color:var(--gray);font-weight:400">(제조AI 매트릭스 기준)</span></label>
+        <select id="procSelect" style="width:100%;padding:14px 16px;border:1.5px solid var(--line);border-radius:12px;font-size:15.5px;font-family:inherit;background:#fff"></select>
+        <p class="sub" style="margin-bottom:18px">예) 제조공정 = 설비·가공·조립·검사, 환경/에너지/안전 = 전력·배출·작업안전</p>
+        <label for="taskInput">구체적으로 어떤 업무인가요?</label>
+        <input id="taskInput" type="text" placeholder="예: 설비 진동·온도를 보고 작업자가 고장 시점을 판단하는 일" />
         <p class="sub">한 줄로 적어 주세요. 결과를 이 업무에 맞춰 설명해 드립니다. (선택)</p>
-        <div class="task-egs">
-          <p class="task-egs-title">막막하면, 비슷한 업무를 눌러 시작하세요 (누른 뒤 수정해도 됩니다)</p>
-          <div class="eg-group">
-            <div class="eg-group-label">설계·엔지니어링</div>
-            <div class="eg-chips">
-              <span class="eg-chip" onclick="fillTask(this)">CAD 도면을 BOM 엑셀로 수기 이관</span>
-              <span class="eg-chip" onclick="fillTask(this)">PLC I/O·전장도면 매핑 수작업</span>
-            </div>
-          </div>
-          <div class="eg-group">
-            <div class="eg-group-label">현장 데이터·이상탐지</div>
-            <div class="eg-chips">
-              <span class="eg-chip" onclick="fillTask(this)">설비·계측 데이터 이상 패턴 파악</span>
-              <span class="eg-chip" onclick="fillTask(this)">불량·품질 판정을 육안에 의존</span>
-            </div>
-          </div>
-          <div class="eg-group">
-            <div class="eg-group-label">실무 프로세스</div>
-            <div class="eg-chips">
-              <span class="eg-chip" onclick="fillTask(this)">측정 데이터를 보고서에 중복 타이핑</span>
-              <span class="eg-chip" onclick="fillTask(this)">부서별 취합·정기 보고서 작성</span>
-            </div>
-          </div>
-          <div class="eg-group">
-            <div class="eg-group-label">품질 표준화·기술 자산화</div>
-            <div class="eg-chips">
-              <span class="eg-chip" onclick="fillTask(this)">작업자 숙련도 차이로 품질 편차</span>
-              <span class="eg-chip" onclick="fillTask(this)">숙련자 노하우를 알고리즘으로 자산화</span>
-            </div>
-          </div>
-        </div>
       </div>
       <form id="quizForm"></form>
       <div class="quiz-actions">
@@ -299,6 +290,32 @@
         <div class="radar-box"><canvas id="radar" width="380" height="340"></canvas></div>
         <details class="breakdown" id="breakdown"><summary>점수 계산 내역 보기</summary><div id="breakdownBody"></div></details>
         <textarea id="shareBox" class="hidden" readonly></textarea>
+      </div>
+
+      <!-- 제조AI: 추천 유형 + 매트릭스 셀 + 사업계획서 문장 -->
+      <div class="biz" id="bizCard">
+        <div class="biz-head">
+          <div class="k">제조AI특화 스마트공장 구축지원사업 — 추천 지원유형</div>
+          <div class="v" id="bizType">—</div>
+        </div>
+        <div class="biz-body" id="bizBody"></div>
+      </div>
+
+      <!-- 추진절차 위치: 우리 진단·DT가 어디에 쓰이는지 -->
+      <div class="stagebar">
+        <div class="sb-title">이 결과는 사업 추진절차의 어디에 쓰이나요?</div>
+        <div class="sb-flow">
+          <div class="sb-step"><span>②</span><b>신청접수</b></div>
+          <div class="sb-step"><span>③</span><b>요건검토</b></div>
+          <div class="sb-step maia"><span class="tag">MAIA 진단</span><span>④</span><b>사업계획서 작성</b></div>
+          <div class="sb-step"><span>⑤</span><b>기술성평가</b></div>
+          <div class="sb-step"><span>⑦·⑧</span><b>협약·구축</b></div>
+          <div class="sb-step dt"><span class="tag">디지털트윈</span><span>⑩</span><b>시나리오·검증</b></div>
+        </div>
+        <div class="sb-legend">
+          <b>MAIA 진단</b> = ④ 사업계획서의 유형·공정·AI기능·현행분석을 채웁니다. ·
+          <b>디지털 트윈</b> = ⑧ 구축·⑩ AI기능 시나리오 검증 환경을 제공합니다.
+        </div>
       </div>
 
       <!-- 우리 개발 방식: 세 갈래를 쉽게 -->
@@ -357,10 +374,6 @@
 
 <footer>
   MAIA v1.0 &nbsp;|&nbsp; 한국폴리텍대학 대구캠퍼스 이차전지시스템과 &nbsp;|&nbsp; 안창한 &nbsp;|&nbsp; 2026
-  <br>
-  <a id="privacyLink" href="privacy.html" style="color:var(--blue);text-decoration:none;font-weight:600">개인정보 처리방침</a>
-  &nbsp;·&nbsp;
-  <a href="en.html" style="color:var(--blue);text-decoration:none;font-weight:600">English</a>
 </footer>
 
 <script>
@@ -443,6 +456,32 @@ const DIMS = [
 const answers = new Array(DIMS.length).fill(null);
 const answerIdx = new Array(DIMS.length).fill(null);
 
+/* ── 붙임1 제조AI 기능별·공정별 매트릭스 (공고 p.12 SOT) ──
+   공정(A~G) × AI기능(1~5). 제조 핵심공정(D·F·E)을 앞에 노출(집중형). */
+const PROCESSES = [
+  { code:"D", name:"제조공정" },
+  { code:"F", name:"환경/에너지/안전" },
+  { code:"E", name:"물류" },
+  { code:"C", name:"구매" },
+  { code:"G", name:"사후서비스" },
+  { code:"B", name:"제품기획/설계" },
+  { code:"A", name:"재무/인사관리" },
+];
+const FUNCS = { 1:"인지", 2:"예측", 3:"자동화", 4:"소통", 5:"생성" };
+const MATRIX = {
+  A:{1:"계약서 검토",2:"채용시스템 운영",3:"ERP 결합 업무 자동화",4:"챗봇 기반 사내 정보 검색",5:"업무 보고서 생성"},
+  B:{1:"기술 자료 검색",2:"시제품 성능 예측",3:"특허 분석 자동화",4:"코드 CD/CI 자동화",5:"신제품 아이디어 생성"},
+  C:{1:"자재 구매 데이터 통합 분석",2:"원자재 가격 예측",3:"자재 수급 최적화",4:"자동 발주 추천",5:"수요예측과 협업 최적화"},
+  D:{1:"작업자·동작 감지",2:"실시간 설비 이상 예측",3:"불량 분석 자동화",4:"디지털 트윈 내 실시간 협업",5:"가상 품질 평가"},
+  E:{1:"드론 활용 재고 추적",2:"실시간 재고·공급 예측",3:"실시간 물류 제어",4:"배송 경로 최적화",5:"디지털 트윈 기반 물류 창고"},
+  F:{1:"현장작업자 자세 위험도 분석",2:"산업용 전력소비량 예측",3:"공장 에너지 자율제어",4:"AI 기반 안전점검 AR 챗봇",5:"탄소배출·환경영향평가 리포트 생성"},
+  G:{1:"제품 에러코드 판별",2:"고객 리뷰 분석",3:"예지보전 자동화",4:"보이스봇 고객 문의 처리",5:"매뉴얼 제공"},
+};
+function selectedProc(){
+  const code=(document.getElementById('procSelect')||{}).value || "D";
+  return PROCESSES.find(p=>p.code===code) || PROCESSES[0];
+}
+
 /* ── 운영 설정 (🙋 계정 생성 후 URL만 채우면 가동) ──
    신청 폼은 leadFormAction(A7y8Xo) 하나로 통일한다 — 중복 폼 금지(2026-05-30 정책).
    모든 신청(자가진단 리드·상세 리포트·PoC)은 같은 폼으로 보내고, 어느 버튼에서
@@ -453,9 +492,6 @@ const answerIdx = new Array(DIMS.length).fill(null);
                       비워두면 leadFormAction으로 폴백(시간 조율은 수동)
    진단 점수·등급은 폼 URL에 자동으로 붙어 리드 기록에 함께 저장된다. */
 const CONFIG = {
-  // 발행 모드(2026-06-09): leadEnabled=true → 리드 수집 퍼널 ON(개인 명의 처리방침 v1.0 적용).
-  // 공개 전제: Tally 필수/선택 2단 동의 설정 완료. false로 바꾸면 진단만(개인정보 0) 모드로 전환.
-  leadEnabled:     true,
   operatorEmail:   "chahn@kopo.ac.kr",  // Tally 없이 신청 받을 주소(폴백). 신청자 메일앱으로 발송됨
   leadFormAction:  "https://tally.so/r/A7y8Xo",   // Tally 단일 통합 폼 (2026-05-30 연결). 점수·등급·업무 자동 전달
   detailReportUrl: "",   // 비워두면 leadFormAction 재사용. 새 폼 생성 금지(중복 입력 방지)
@@ -479,18 +515,12 @@ function withResult(url, kind){
     score: lastResult.gated ? "gated" : (lastResult.score!=null?lastResult.score.toFixed(2):""),
     grade: lastResult.grade || "",
     task:  lastResult.task || "",
+    proc:  lastResult.proc || "",                    // 선택 공정 (붙임1 A~G)
+    biztype: lastResult.biztype || "",               // 추천 유형 (데이터 수집·검증 / AI공장 구축)
     a:     (lastResult.answers||[]).join(','),       // C1..C8 raw — 항목별 해석 생성용
     src:   srcVal                                    // 채널 추적: community/blog/youtube/email 등
   });
   return url + (url.includes('?')?'&':'?') + q.toString();
-}
-
-/* 예시 칩 클릭 → 진단 업무 입력란 채움(수정 가능). 직접 입력 우선, 칩은 보조. */
-function fillTask(el){
-  const inp = document.getElementById('taskInput');
-  if(!inp) return;
-  inp.value = (el.textContent || '').trim();
-  inp.focus();
 }
 
 /* ── 렌더 ── */
@@ -619,6 +649,120 @@ const GRADE_COLORS={
   red:{bg:"var(--red-bg)",fg:"var(--red-fg)",bar:"#D9534F"},
 };
 
+/* ── 제조AI 유형 판정 ──
+   "데이터 집계방법(자동·반자동·수동)" = 사업 유형 게이트.
+   데이터 성숙도 = C4(디지털화)*0.6 + C2(정보 완전성)*0.4  ※ MAIA 점수와 별개의 매핑층(엔진 무손상)
+   - 수동(<0.40)  → 수집되는 데이터 없음 → [데이터 수집·검증] 유형부터(6개월·최대 0.5억)
+   - 반자동(<0.65) → 데이터 일부 보유    → [AI공장 구축] (데이터 보강 병행)
+   - 자동(≥0.65)  → 데이터 보유          → [AI공장 구축] (9개월·최대 2억) */
+function dataMaturity(){
+  const c4=answers[3], c2=answers[1];
+  const ds=c4*0.6 + c2*0.4;
+  let collect, cls, biztype;
+  if(ds<0.40){ collect="수동"; cls="manual"; biztype="데이터 수집·검증"; }
+  else if(ds<0.65){ collect="반자동"; cls="semi"; biztype="AI공장 구축"; }
+  else { collect="자동"; cls="auto"; biztype="AI공장 구축"; }
+  return { ds:Math.round(ds*100)/100, collect, cls, biztype };
+}
+/* 추진주체(MAIA 판정)에 따른 1차 추천 AI기능(매트릭스 행). 정식 진단에서 확정. */
+function recommendFunc(g){
+  if(g.cls==="green") return 3;   // 자동화
+  if(g.cls==="yellow") return 2;  // 예측
+  return 1;                       // 인지(보조 적용)
+}
+const MODE_SHORT={ green:"AI 단독(🤖)", yellow:"사람·AI 협업(🤝)", red:"전문가 검토 후 결정(🙋)" };
+const MODE_PLAN ={ green:"AI 단독", yellow:"사람·AI 협업", red:"전문가 검토 후 결정" };  // 계획서 문장용(이모지 없이)
+
+/* 현행분석용 약점 사유 텍스트(상위 2개) */
+function weakReasons(n){
+  const eff=DIMS.map((d,i)=>({code:d.code, v:(d.invert?(1-answers[i]):answers[i])}));
+  return [...eff].sort((a,b)=>a.v-b.v).filter(x=>x.v<=0.45).slice(0,n).map(w=>REASON_LOW[w.code]);
+}
+
+function renderBiz(score, gated, g){
+  const proc=selectedProc();
+  const dm=dataMaturity();
+  const task=(document.getElementById('taskInput')?.value||'').trim();
+  const head=document.getElementById('bizType');
+  const body=document.getElementById('bizBody');
+
+  const periodTxt = dm.biztype==="데이터 수집·검증" ? "최대 6개월 · 최대 0.5억원" : "최대 9개월 · 최대 2억원";
+  head.innerHTML = `${dm.biztype} 유형 <small>${periodTxt}</small>`;
+
+  // 데이터 집계방법 행
+  let rows = `<div class="biz-row"><div class="lab">데이터 집계방법</div>
+      <div class="val"><span class="chip ${dm.cls}">${dm.collect}</span>
+      &nbsp;<span style="color:var(--gray);font-size:13px">기술성평가 '데이터 집계 포인트' 항목에 해당</span></div></div>`;
+
+  if(dm.biztype==="데이터 수집·검증"){
+    rows += `<div class="biz-row"><div class="lab">왜 이 유형인가</div>
+        <div class="val">현재 <b>${proc.code}-${proc.name}</b> 공정의 데이터가 대부분 <b>수동</b>으로 다뤄져,
+        AI를 적용할 데이터가 아직 쌓이지 않습니다. 먼저 <b>데이터 수집·관리 체계</b>를 갖추는 단계입니다.</div></div>`;
+    rows += `<div class="biz-row"><div class="lab">우선 할 일</div>
+        <div class="val">${proc.name} 공정의 설비 가동·실적·품질 데이터를 자동 수집하는 체계 구축
+        → 이후 <b>AI공장 구축</b> 유형으로 연계 신청(①→② 단계, 합산 최대 2억).</div></div>`;
+  } else {
+    const fn=recommendFunc(g);
+    rows += `<div class="biz-row"><div class="lab">추천 AI기능<br>(매트릭스 셀)</div>
+        <div class="val"><b>${proc.code}-${proc.name} × ${fn}-${FUNCS[fn]}</b><br>
+        <span style="color:var(--gray);font-size:13px">예시 적용: ${MATRIX[proc.code][fn]}</span></div></div>`;
+    rows += `<div class="biz-row"><div class="lab">추진 주체</div>
+        <div class="val"><b>${MODE_SHORT[g.cls]}</b> — ${g.mode}</div></div>`;
+    // 디지털 트윈 연결 고지 (D·E 공정에서 4-소통 셀이 곧 DT)
+    if(proc.code==="D" || proc.code==="E"){
+      rows += `<div class="biz-row"><div class="lab">디지털트윈 연계</div>
+          <div class="val">${proc.code}-${proc.name} × 4-소통 = <b>${MATRIX[proc.code][4]}</b>.
+          본 진단을 만든 팀의 <b>디지털 트윈</b>이 ⑧구축·⑩검증 단계에 바로 활용됩니다.</div></div>`;
+    }
+  }
+
+  // 현행분석(문제점 도출) — 계획서 배점 항목
+  const weak=weakReasons(2);
+  if(weak.length){
+    rows += `<div class="biz-row"><div class="lab">현행 문제점<br>(계획서용)</div>
+        <div class="val">${weak.join(' · ')}</div></div>`;
+  }
+
+  // 사업계획서 붙여쓰기 문장
+  const procStr=`${proc.code}-${proc.name}`;
+  const probStr= weak.length ? weak.join(', ') : '현행 공정의 데이터 활용도가 낮음';
+  let plan;
+  if(dm.biztype==="데이터 수집·검증"){
+    plan = `당사 ${procStr} 공정은 ${probStr} 등으로 데이터 집계가 '${dm.collect}' 수준이다. `
+         + `이에 [데이터 수집·검증] 유형으로 ${proc.name} 공정의 가동·품질·실적 데이터 수집·관리 체계를 우선 구축하고, `
+         + `차년도 [AI공장 구축] 단계로 연계하여 ${MATRIX[proc.code][2]} 등 AI 적용을 목표로 한다.`;
+  } else {
+    const fn=recommendFunc(g);
+    plan = `당사 ${procStr} 공정은 ${probStr} 등의 문제점이 있으며, 데이터 집계는 '${dm.collect}' 수준이다. `
+         + `이에 [AI공장 구축] 유형으로 ${procStr} 공정에 ${fn}-${FUNCS[fn]}(${MATRIX[proc.code][fn]}) 적용을 추진하며, `
+         + `추진 방식은 '${MODE_PLAN[g.cls]}'으로 한다.`;
+  }
+  body.innerHTML = rows
+    + `<div class="plan-box">
+         <div class="pl-lab">📋 사업계획서 붙여쓰기용 문장 (초안)</div>
+         <div class="pl-txt" id="planTxt">${plan}</div>
+         <span class="pl-copy" onclick="copyPlan()">⧉ 이 문장 복사</span>
+       </div>`;
+  lastResult.proc=procStr; lastResult.biztype=dm.biztype; lastResult.collect=dm.collect;
+
+  // 공유/복사용 텍스트에 제조AI 진단 요약 덧붙임
+  const sb=document.getElementById('shareBox');
+  if(sb){
+    sb.value += `\n\n── 제조AI 진단 ──\n공정: ${procStr}\n추천 유형: ${dm.biztype}`
+      + `\n데이터 집계방법: ${dm.collect}`
+      + (dm.biztype==="AI공장 구축" ? `\n추천 매트릭스 셀: ${proc.code}-${proc.name} × ${recommendFunc(g)}-${FUNCS[recommendFunc(g)]} (${MATRIX[proc.code][recommendFunc(g)]})` : "")
+      + `\n\n[사업계획서 문장]\n${plan}`;
+  }
+}
+
+function copyPlan(){
+  const t=(document.getElementById('planTxt')?.textContent||'').trim();
+  if(navigator.clipboard){ navigator.clipboard.writeText(t).then(
+    ()=>alert('계획서 문장이 복사됐어요.'),
+    ()=>alert('복사 권한이 없어요. 문장을 직접 선택해 복사해 주세요.')); }
+  else alert('문장을 직접 선택해 복사해 주세요.');
+}
+
 function showResult(score, gated){
   document.getElementById('quizWrap').classList.add('hidden');
   document.getElementById('resultWrap').classList.remove('hidden');
@@ -647,6 +791,7 @@ function showResult(score, gated){
   document.getElementById(modeId).classList.add('on');
 
   buildBreakdown(score, gated, g);
+  renderBiz(score, gated, g);
   drawRadar();
 }
 
@@ -744,7 +889,6 @@ function drawRadar(){
    회사·이메일·연락처는 Tally에서 한 번만 입력(HTML에서 또 묻지 않음 — 중복 입력 방지). */
 function openLeadForm(e){
   if(e) e.preventDefault();
-  if(!CONFIG.leadEnabled){ setLockClosed(); return false; }   // 1단계: 개인정보 수집(Tally) 비활성
   if(CONFIG.leadFormAction){
     window.open(withResult(CONFIG.leadFormAction, 'lead'), '_blank');
   } else if(CONFIG.operatorEmail){
@@ -759,8 +903,8 @@ function openLeadForm(e){
   const ov=document.getElementById('lockOverlay');
   ov.innerHTML=`<div class="lock-ico">✅</div><h4>신청 화면이 열렸어요</h4>
     <p>새 탭에서 연락처를 한 번만 입력하고 제출하면, 진단 리포트를 보내드립니다.</p>`;
-  // 신청 완료: overlay를 불투명 처리해 뒤 미리보기(blur)와 글자가 겹치지 않게 한다.
-  ov.style.background='rgba(255,255,255,.97)';
+  document.querySelector('#lockedBox .blur').style.filter='none';
+  document.querySelector('#lockedBox .blur').style.opacity='1';
   return false;
 }
 
@@ -780,10 +924,6 @@ function copyResult(){
    전용 URL(detailReportUrl·pocBookingUrl)이 있으면 그것을, 없으면 leadFormAction
    단일 통합 폼을 재사용한다(중복 폼 금지). 어느 버튼에서 왔는지는 kind로 구분한다. */
 function cta(kind){
-  if(!CONFIG.leadEnabled){   // 1단계: 상담 신청도 Tally(개인정보 수집)이므로 차단
-    alert('지금은 무료 진단만 운영 중입니다. 상담·상세 리포트 문의는 chahn@kopo.ac.kr 로 보내 주세요.');
-    return;
-  }
   const url = (kind==='poc' ? CONFIG.pocBookingUrl : CONFIG.detailReportUrl)
               || CONFIG.leadFormAction;   // 폴백: 단일 통합 폼 재사용
   if(url){
@@ -808,29 +948,19 @@ function restart(){
   ov.innerHTML=`<div class="lock-ico">📄</div><h4>진단 리포트(PDF) 신청</h4>
     <p>신청하면 항목별 해석·우선순위·단계별 로드맵을 담은 진단 리포트를 보내드립니다. 회사·연락처는 다음 화면에서 한 번만 적으면 됩니다.</p>
     <button class="btn btn-cta" onclick="openLeadForm(event)">리포트 신청하기</button>`;
-  ov.style.background='';  // overlay 반투명 원복
-  if(!CONFIG.leadEnabled) setLockClosed();   // 1단계: 신청 버튼 대신 안내 유지
+  const blur=document.querySelector('#lockedBox .blur');
+  blur.style.filter=''; blur.style.opacity='';
   window.scrollTo(0,0);
 }
 
-/* ── 2단계 발행 게이트 (개인정보 수집 on/off) ──
-   leadEnabled=false면 Tally(개인정보) UI를 비활성화하고 진단만 노출. true 전환 시 복원. */
-function setLockClosed(){
-  const ov=document.getElementById('lockOverlay');
-  if(!ov) return;
-  ov.innerHTML=`<div class="lock-ico">🔧</div><h4>상세 리포트는 곧 열립니다</h4>`
-    +`<p>지금은 무료 진단만 운영 중입니다. 상세 리포트·상담 문의는 <b>chahn@kopo.ac.kr</b> 로 보내 주세요.</p>`;
-  ov.style.background='rgba(255,255,255,.97)';
-}
-function applyLeadGate(){
-  if(CONFIG.leadEnabled) return;
-  const pl=document.getElementById('privacyLink');
-  if(pl) pl.outerHTML='<span style="color:var(--gray)">이 진단은 개인정보를 수집하지 않습니다 · 점수는 브라우저에서 계산됩니다</span>';
-  setLockClosed();
+function buildProcSelect(){
+  const sel=document.getElementById('procSelect');
+  if(!sel) return;
+  sel.innerHTML = PROCESSES.map(p=>`<option value="${p.code}">${p.code}. ${p.name}</option>`).join('');
 }
 
+buildProcSelect();
 buildQuiz();
-applyLeadGate();
 </script>
 </body>
 </html>
