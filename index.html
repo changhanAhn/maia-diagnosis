@@ -1,836 +1,317 @@
 <!DOCTYPE html>
 <!--
-  파일: maia-self-diagnosis.html
-  파일 버전: v1.2 (MAIA 방법론 v1.0 적용)
-  작성자: 안창한 · 한국폴리텍대학 대구캠퍼스 이차전지시스템과
-
-  변경 이력:
-   - v1.2 (2026-06-03) 도입 업무 입력란에 예시 칩 8개 추가(서비스소개서 4분류 기반)
-                       + lockOverlay·blur 겹침 결함 수정(신청 완료 박스 불투명화)
-   - v1.1 (2026-05-30) Tally hidden 6필드 연동 + HTML 신청폼 폐기(중복 제거 정책)
-                       + ?src 단일 파라미터 우선 추출
-   - v1.0 (2026-05-29) 신설. 8문항 자가진단·MAIA archetype 8종·결과 카드·리포트 신청 게이트
+  landing-home.html → 배포 시 maia-diagnosis repo의 index.html (홈)
+  v0.4 (2026-06-09): 문장 전면 리라이팅 + 설득력 강화
 -->
 <html lang="ko">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>MAIA 무료 자가진단 — 우리 회사 이 업무, AI로 바꿀 수 있을까?</title>
-<meta name="description" content="8개 질문 3분. AI 적용 가능성을 점수로 무료 진단합니다. MAIA v1.0" />
+<title>MAIA — 우리 회사 이 업무, AI로 바꿀 수 있을까?</title>
+<meta name="description" content="AI가 AI를 진단·개발·검수하는 메타시스템 MAIA. 공장·사무실 반복 업무를 점수로 정확히 진단하고, 정말 될 일만 개발합니다." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://changhanahn.github.io/maia-diagnosis/" />
+<meta property="og:title" content="이 업무, AI로 바꿀 수 있을까? — MAIA" />
+<meta property="og:description" content="AI가 AI를 진단·개발·검수하는 메타시스템. 무료 진단 8문항 1분." />
+<meta property="og:image" content="https://changhanahn.github.io/maia-diagnosis/maia-share-card.png" />
+<meta name="twitter:card" content="summary_large_image" />
 <link rel="preconnect" href="https://cdn.jsdelivr.net" />
 <link rel="stylesheet" as="style" crossorigin
   href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
 <style>
   :root{
-    --navy:#1F3864; --blue:#2E75B6; --lblue:#BDD7EE;
-    --ink:#1A1A2E; --gray:#6B7280; --line:#E5E7EB; --bg:#FFFFFF; --soft:#F7F9FC;
-    --green-bg:#C6EFCE; --green-fg:#1E6F2E;
-    --yellow-bg:#FFEB9C; --yellow-fg:#9C5700;
-    --red-bg:#FFC7CE; --red-fg:#9C0006;
-    --radius:14px;
+    --ink:#111317; --ink-2:#3d424d; --mute:#8a909c; --line:#e8eaee; --line-2:#d9dce2;
+    --bg:#ffffff; --bg-2:#fafbfc; --navy:#1f3a5f; --accent:#2563eb; --accent-soft:#eef3fe;
+    --ok:#177245;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
-  body{
-    font-family:'Pretendard',-apple-system,BlinkMacSystemFont,system-ui,'Segoe UI',Roboto,'Malgun Gothic',sans-serif;
-    color:var(--ink);background:var(--bg);line-height:1.6;-webkit-font-smoothing:antialiased;
-  }
-  .wrap{max-width:760px;margin:0 auto;padding:0 20px}
-  section{padding:64px 0}
-  .hidden{display:none !important}
-
-  /* HERO */
-  .hero{background:linear-gradient(160deg,var(--navy),#16294a);color:#fff;text-align:center;padding:88px 0 72px}
-  .hero .badge{display:inline-block;font-size:13px;letter-spacing:.04em;background:rgba(255,255,255,.12);
-    border:1px solid rgba(255,255,255,.25);padding:6px 14px;border-radius:999px;margin-bottom:22px}
-  .hero h1{font-size:34px;font-weight:800;line-height:1.3;letter-spacing:-.02em}
-  .hero h1 .accent{color:#8FC3F2}
-  .hero p{margin-top:18px;font-size:17px;color:#D7E3F4;font-weight:400}
-  .hero .meta{margin-top:8px;font-size:14px;color:#9FB6D6}
-  .btn{display:inline-block;border:none;cursor:pointer;font-family:inherit;font-weight:700;
-    border-radius:999px;transition:transform .12s ease,box-shadow .12s ease,background .15s ease;text-decoration:none}
+  body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,system-ui,'Malgun Gothic',sans-serif;
+    color:var(--ink);background:var(--bg);line-height:1.65;-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
+  .wrap{max-width:980px;margin:0 auto;padding:0 24px}
+  section{padding:108px 0}
+  a{color:inherit;text-decoration:none}
+  .eyebrow{font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+  h2.sec{font-size:clamp(26px,3.6vw,40px);font-weight:800;letter-spacing:-.03em;line-height:1.18;margin-top:14px}
+  p.sec-sub{color:var(--ink-2);margin-top:16px;font-size:17px;max-width:600px}
+  .center{text-align:center}.center p.sec-sub{margin-left:auto;margin-right:auto}
+  .btn{display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-family:inherit;font-weight:700;
+    border-radius:10px;border:1px solid transparent;transition:background .15s,border-color .15s,transform .1s}
   .btn:active{transform:translateY(1px)}
-  .btn-primary{background:#fff;color:var(--navy);font-size:17px;padding:16px 38px;margin-top:34px;
-    box-shadow:0 8px 24px rgba(0,0,0,.18)}
-  .btn-primary:hover{box-shadow:0 12px 30px rgba(0,0,0,.26)}
-  .btn-cta{background:var(--blue);color:#fff;font-size:16px;padding:15px 26px}
-  .btn-cta:hover{background:#255f96}
-  .btn-ghost{background:var(--soft);color:var(--navy);font-size:16px;padding:15px 26px;border:1px solid var(--line)}
-  .btn-ghost:hover{background:#eef2f8}
-
-  /* QUIZ */
-  .progress{position:sticky;top:0;background:rgba(255,255,255,.92);backdrop-filter:blur(6px);
-    z-index:5;border-bottom:1px solid var(--line);padding:14px 0}
-  .progress .wrap{display:flex;align-items:center;gap:14px}
-  .pbar{flex:1;height:8px;background:var(--line);border-radius:999px;overflow:hidden}
-  .pbar i{display:block;height:100%;width:0;background:var(--blue);border-radius:999px;transition:width .25s ease}
-  .pcount{font-size:13px;color:var(--gray);font-weight:600;white-space:nowrap}
-
-  .q{margin-bottom:28px;padding-bottom:28px;border-bottom:1px dashed var(--line)}
-  .q:last-of-type{border-bottom:none}
-  .q .code{font-size:12px;font-weight:700;color:var(--blue);letter-spacing:.06em}
-  .q .gate-tag{display:inline-block;font-size:11px;font-weight:700;color:var(--red-fg);
-    background:var(--red-bg);border-radius:6px;padding:1px 7px;margin-left:6px;vertical-align:middle}
-  .q h3{font-size:19px;font-weight:700;margin:6px 0 10px;letter-spacing:-.01em}
-  .q-hint{font-size:13px;color:var(--gray);background:var(--soft);border-radius:8px;
-    padding:9px 12px;margin:0 0 14px;line-height:1.6}
-  .opts{display:grid;gap:10px}
-  .opt{display:flex;align-items:center;gap:12px;padding:14px 16px;border:1.5px solid var(--line);
-    border-radius:12px;cursor:pointer;transition:border-color .12s,background .12s}
-  .opt:hover{border-color:var(--lblue);background:var(--soft)}
-  .opt input{appearance:none;width:20px;height:20px;border:2px solid #C4CCD8;border-radius:50%;
-    flex:none;position:relative;cursor:pointer;transition:border-color .12s}
-  .opt input:checked{border-color:var(--blue)}
-  .opt input:checked::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--blue)}
-  .opt.sel{border-color:var(--blue);background:#F0F6FC}
-  .opt span{font-size:15.5px}
-  .quiz-actions{margin-top:36px;text-align:center}
-  .quiz-actions .hint{font-size:13px;color:var(--gray);margin-top:14px}
-  #submitBtn[disabled]{opacity:.45;cursor:not-allowed}
-
-  .section-head{text-align:center;margin-bottom:40px}
-  .section-head h2{font-size:27px;font-weight:800;letter-spacing:-.02em}
-  .section-head p{color:var(--gray);margin-top:8px;font-size:15px}
-
-  /* RESULT */
-  .result-card{background:var(--soft);border:1px solid var(--line);border-radius:var(--radius);
-    padding:36px 30px;text-align:center}
-  .gauge-label{font-size:14px;color:var(--gray);font-weight:600}
-  .score-num{font-size:54px;font-weight:800;color:var(--navy);line-height:1.1;margin:4px 0 2px}
-  .score-num small{font-size:22px;color:var(--gray);font-weight:600}
-  .meter{height:14px;background:#E3E9F2;border-radius:999px;overflow:hidden;margin:18px auto 8px;max-width:420px}
-  .meter i{display:block;height:100%;width:0;border-radius:999px;transition:width .8s cubic-bezier(.2,.8,.2,1)}
-  .grade{display:inline-block;font-size:18px;font-weight:800;border-radius:999px;padding:8px 22px;margin-top:18px}
-  .verdict{margin-top:16px;font-size:16px;color:var(--ink)}
-  .pnote{margin:14px auto 0;max-width:480px;font-size:14.5px;color:#374151;background:#fff;
-    border:1px solid var(--line);border-radius:12px;padding:14px 18px;text-align:left;line-height:1.7}
-  .pnote b{color:var(--navy)}
-  .pn-task{font-size:15px;color:var(--ink);margin-bottom:10px}
-  .pn-task b{color:var(--navy)}
-  .pn-group{margin-top:12px}
-  .pn-group:first-of-type{margin-top:0}
-  .pn-label{font-size:13px;font-weight:700;color:var(--red-fg);margin-bottom:5px}
-  .pn-label.pn-good{color:var(--green-fg)}
-  .pn-group ul{list-style:none;margin:0;padding:0;display:grid;gap:5px}
-  .pn-group li{font-size:14px;color:#374151;padding-left:15px;position:relative;line-height:1.55}
-  .pn-group li::before{content:"·";position:absolute;left:3px;color:var(--gray);font-weight:700}
-  .task-box{max-width:560px;margin:0 auto 30px;text-align:left}
-  .task-box label{display:block;font-size:14px;font-weight:700;color:var(--navy);margin-bottom:8px}
-  .task-box input{width:100%;padding:14px 16px;border:1.5px solid var(--line);border-radius:12px;
-    font-size:15.5px;font-family:inherit}
-  .task-box input:focus{outline:none;border-color:var(--blue)}
-  .task-box .sub{font-size:12.5px;color:var(--gray);margin-top:6px}
-  /* 진단 업무 예시 칩 (서비스소개서 4분류 기반) — 빈 입력란 인지부담·1차 이탈 완화 */
-  .task-egs{margin-top:16px}
-  .task-egs-title{font-size:12.5px;color:var(--gray);margin-bottom:11px}
-  .eg-group{margin-bottom:11px}
-  .eg-group-label{font-size:11.5px;font-weight:700;color:var(--blue);margin-bottom:6px;letter-spacing:.02em}
-  .eg-chips{display:flex;flex-wrap:wrap;gap:7px}
-  .eg-chip{font-size:12.5px;color:var(--navy);background:#F4F7FB;border:1px solid var(--line);
-    border-radius:999px;padding:7px 13px;cursor:pointer;transition:border-color .12s,background .12s,transform .08s;line-height:1.3}
-  .eg-chip:hover{border-color:var(--blue);background:#EAF1FB}
-  .eg-chip:active{transform:scale(.97)}
-  .radar-box{margin:34px auto 0;display:flex;justify-content:center}
-  canvas{max-width:100%}
-
-  /* LOCKED / EMAIL GATE */
-  .locked{position:relative;margin-top:28px;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
-  .locked .blur{position:absolute;inset:0;filter:blur(6px);opacity:.5;padding:26px;pointer-events:none;user-select:none;overflow:hidden}
-  .locked .blur ul{list-style:none;text-align:left;display:grid;gap:10px;max-width:440px;margin:0 auto}
-  .locked .blur li{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 16px;font-size:14px}
-  .lock-overlay{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;
-    text-align:center;background:rgba(255,255,255,.55);padding:28px 20px}
-  .lock-overlay .lock-ico{font-size:26px}
-  .lock-overlay h4{font-size:18px;font-weight:800;margin:6px 0 4px;color:var(--navy)}
-  .lock-overlay p{font-size:14px;color:var(--gray);max-width:380px}
-  .email-form{display:flex;gap:8px;margin-top:16px;width:100%;max-width:420px}
-  .email-form input{flex:1;padding:13px 16px;border:1.5px solid var(--line);border-radius:10px;font-size:15px;font-family:inherit}
-  .email-form input:focus{outline:none;border-color:var(--blue)}
-  .lead-form{display:grid;gap:8px;width:100%;max-width:420px;margin-top:16px}
-  .lead-form input{padding:13px 16px;border:1.5px solid var(--line);border-radius:10px;font-size:15px;font-family:inherit}
-  .lead-form input:focus{outline:none;border-color:var(--blue)}
-  .lead-form .btn{margin-top:2px}
-
-  /* PAID CTA */
-  .cta-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px}
-  .cta-card{border:1px solid var(--line);border-radius:var(--radius);padding:26px 22px;text-align:left;
-    background:#fff;display:flex;flex-direction:column}
-  .cta-card.hi{border-color:var(--blue);box-shadow:0 6px 22px rgba(46,117,182,.12)}
-  .cta-card .tier{font-size:12px;font-weight:700;color:var(--blue);letter-spacing:.06em}
-  .cta-card h4{font-size:19px;font-weight:800;margin:6px 0 4px}
-  .cta-card .price{font-size:15px;color:var(--gray);font-weight:600}
-  .cta-card ul{list-style:none;margin:16px 0 22px;display:grid;gap:8px}
-  .cta-card li{font-size:14px;padding-left:20px;position:relative;color:#374151}
-  .cta-card li::before{content:"✓";position:absolute;left:0;color:var(--blue);font-weight:800}
-  .cta-card .btn{margin-top:auto;text-align:center}
-  .cta-single{max-width:440px;margin:0 auto}
-
-  /* 점수 계산 내역 */
-  .breakdown{margin-top:24px;text-align:left;border:1px solid var(--line);border-radius:12px;background:#fff}
-  .breakdown summary{cursor:pointer;padding:13px 18px;font-size:14px;font-weight:700;color:var(--navy);list-style:none}
-  .breakdown summary::-webkit-details-marker{display:none}
-  .breakdown summary::before{content:"▸ ";color:var(--blue)}
-  .breakdown[open] summary::before{content:"▾ "}
-  .bd-table{width:100%;border-collapse:collapse;font-size:13px}
-  .bd-table th,.bd-table td{padding:9px 12px;border-top:1px solid var(--line);text-align:left;vertical-align:top}
-  .bd-table th{color:var(--gray);font-weight:600;background:var(--soft)}
-  .bd-table td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
-  .bd-total{font-weight:800;color:var(--navy)}
-  #shareBox{width:100%;height:150px;margin-top:12px;padding:12px;border:1.5px solid var(--blue);border-radius:10px;
-    font-family:ui-monospace,Consolas,monospace;font-size:12px;color:#374151;resize:vertical}
-
-  /* 우리 개발 방식 3-mode */
-  .modes{margin-top:24px;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
-  .modes-title{background:var(--soft);padding:12px 18px;font-size:13.5px;font-weight:700;color:var(--navy);
-    border-bottom:1px solid var(--line)}
-  .mode-row{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:13px 18px;
-    border-bottom:1px solid var(--line);font-size:14px;transition:background .15s}
-  .mode-row:last-child{border-bottom:none}
-  .mode-row b{color:var(--ink);white-space:nowrap}
-  .mode-row span{color:var(--gray);text-align:right;font-size:13px}
-  .mode-row.on{background:#F0F6FC}
-  .mode-row.on b{color:var(--blue)}
-  .mode-row.on::after{content:"← 지금 결과";color:var(--blue);font-size:11.5px;font-weight:700;white-space:nowrap}
-  .funnel-note{margin-top:16px;background:#F0F6FC;border:1px solid var(--lblue);border-radius:var(--radius);
-    padding:18px 20px;font-size:14px;line-height:1.75;color:#334155;text-align:center}
-  .funnel-note b{color:var(--navy)}
-
-  footer{background:var(--soft);border-top:1px solid var(--line);padding:30px 0;text-align:center;
-    font-size:12.5px;color:var(--gray)}
-  .restart{display:inline-block;margin-top:18px;color:var(--blue);font-size:14px;cursor:pointer;
-    text-decoration:underline;font-weight:600}
-
-  @media(max-width:560px){
-    .hero h1{font-size:27px}.score-num{font-size:44px}
-    .cta-grid{grid-template-columns:1fr}
-    .email-form{flex-direction:column}
-    section{padding:48px 0}
+  .btn-primary{background:var(--ink);color:#fff;font-size:16px;padding:15px 30px}
+  .btn-primary:hover{background:#000}
+  .btn-line{background:#fff;color:var(--ink);border-color:var(--line-2);font-size:16px;padding:15px 30px}
+  .btn-line:hover{border-color:var(--ink);background:var(--bg-2)}
+  .btn-accent{background:var(--accent);color:#fff;font-size:16px;padding:15px 30px}
+  .btn-accent:hover{background:#1d4fd0}
+  /* HERO */
+  .hero{padding:120px 0 96px;border-bottom:1px solid var(--line)}
+  .hero .eyebrow{display:block}
+  .hero h1{font-size:clamp(36px,6.4vw,68px);font-weight:800;letter-spacing:-.04em;line-height:1.08;margin-top:20px}
+  .hero h1 span{color:var(--mute)}
+  .hero .lead{margin-top:26px;font-size:clamp(17px,2.4vw,21px);color:var(--ink-2);max-width:560px;line-height:1.6}
+  .hero .lead b{color:var(--ink);font-weight:700}
+  .hero .cta-row{margin-top:38px;display:flex;gap:12px;flex-wrap:wrap}
+  .hero .micro{margin-top:18px;font-size:14px;color:var(--mute)}
+  .hero .grid{display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:center}
+  .scorecard{border:1px solid var(--line);border-radius:18px;padding:34px;background:var(--bg-2)}
+  .scorecard .lab{font-size:13px;color:var(--mute);font-weight:600;letter-spacing:.02em}
+  .scorecard .num{font-size:68px;font-weight:800;letter-spacing:-.04em;line-height:1;margin:6px 0 0}
+  .scorecard .num small{font-size:22px;color:var(--mute);font-weight:700}
+  .scorecard .bar{height:8px;background:var(--line);border-radius:99px;margin:20px 0 14px;overflow:hidden}
+  .scorecard .bar i{display:block;height:100%;width:78%;background:var(--ink);border-radius:99px}
+  .scorecard .verdict{display:inline-block;font-size:14px;font-weight:700;color:var(--ok)}
+  .scorecard .cap{margin-top:18px;font-size:12.5px;color:var(--mute);border-top:1px solid var(--line);padding-top:14px}
+  /* META 정의 띠 */
+  .meta-band{background:var(--ink);color:#fff;padding:72px 0}
+  .meta-band .eyebrow{color:#7aa0ee}
+  .meta-band h2{font-size:clamp(22px,3vw,32px);font-weight:800;letter-spacing:-.03em;margin-top:14px;line-height:1.3}
+  .meta-band h2 b{color:#fff;border-bottom:2px solid #7aa0ee;padding-bottom:1px}
+  .meta-band .flow{display:flex;gap:14px;flex-wrap:wrap;margin-top:34px}
+  .meta-band .chip{border:1px solid rgba(255,255,255,.2);border-radius:99px;padding:11px 22px;font-size:15px;font-weight:600}
+  .meta-band .chip span{color:#7aa0ee;font-weight:800;margin-right:8px}
+  .meta-band .note{margin-top:24px;font-size:14px;color:#9aa6bd;max-width:640px;line-height:1.7}
+  /* 일반 그리드 */
+  .g3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:56px}
+  .item .k{font-size:13px;font-weight:800;color:var(--mute);letter-spacing:.06em}
+  .item h3{font-size:19px;font-weight:700;margin:10px 0 8px;letter-spacing:-.02em}
+  .item p{font-size:15px;color:var(--ink-2);line-height:1.65}
+  /* 작동 3단계 */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:56px}
+  .step{border-top:2px solid var(--ink);padding-top:22px}
+  .step .n{font-size:14px;font-weight:800;color:var(--accent)}
+  .step h3{font-size:20px;font-weight:700;margin:10px 0 8px;letter-spacing:-.02em}
+  .step p{font-size:15px;color:var(--ink-2);line-height:1.65}
+  .step .free{display:inline-block;margin-top:12px;font-size:12.5px;font-weight:700;color:var(--ok)}
+  /* 사례 3카드 */
+  .case-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:52px}
+  .case-card{border:1px solid var(--line);border-radius:16px;padding:30px 26px;background:var(--bg-2);display:flex;flex-direction:column}
+  .case-card .badge{align-self:flex-start;font-size:11.5px;font-weight:800;letter-spacing:.03em;padding:5px 12px;border-radius:99px;margin-bottom:18px}
+  .case-card .badge.done{background:var(--ink);color:#fff}
+  .case-card .badge.plan{background:#fff;color:var(--mute);border:1px solid var(--line-2)}
+  .case-card h3{font-size:21px;font-weight:800;letter-spacing:-.03em;line-height:1.25}
+  .case-card .cat{font-size:13.5px;color:var(--accent);font-weight:700;margin:8px 0 16px}
+  .case-card .cat .anon{color:var(--mute);font-weight:500}
+  .case-card p{font-size:14.5px;color:var(--ink-2);line-height:1.65}
+  .case-cap{margin-top:26px;font-size:13px;color:var(--mute);line-height:1.7}
+  .case-cap b{color:var(--navy)}
+  /* archetype 8 */
+  .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:48px}
+  .ac{border:1px solid var(--line);border-radius:14px;padding:22px;background:#fff;transition:border-color .15s,transform .1s}
+  .ac:hover{border-color:var(--ink);transform:translateY(-2px)}
+  .ac h4{font-size:16px;font-weight:700;letter-spacing:-.02em}
+  .ac p{font-size:13px;color:var(--ink-2);line-height:1.55;margin-top:8px}
+  .ac .go{font-size:12.5px;font-weight:700;color:var(--accent);margin-top:14px;display:inline-block}
+  /* 가격 — 단순 */
+  .pricing{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:56px}
+  .price{border:1px solid var(--line);border-radius:14px;padding:26px 22px}
+  .price.hi{border-color:var(--ink)}
+  .price .t{font-size:12.5px;font-weight:800;color:var(--mute);letter-spacing:.04em}
+  .price h4{font-size:18px;font-weight:700;margin:8px 0 12px;letter-spacing:-.02em}
+  .price .amt{font-size:24px;font-weight:800;letter-spacing:-.03em}
+  .price .amt small{font-size:14px;color:var(--mute);font-weight:600}
+  .price .dur{font-size:13.5px;color:var(--mute);margin-top:6px}
+  /* FAQ */
+  .faq{margin-top:48px;border-top:1px solid var(--line)}
+  .faq details{border-bottom:1px solid var(--line)}
+  .faq summary{cursor:pointer;padding:22px 0;font-size:17px;font-weight:700;letter-spacing:-.02em;list-style:none;
+    display:flex;justify-content:space-between;align-items:center}
+  .faq summary::-webkit-details-marker{display:none}
+  .faq summary::after{content:"+";color:var(--mute);font-weight:400;font-size:22px}
+  .faq details[open] summary::after{content:"−"}
+  .faq .a{padding:0 0 24px;font-size:15px;color:var(--ink-2);line-height:1.75;max-width:760px}
+  /* 최종 CTA */
+  .final{background:var(--ink);color:#fff;text-align:center}
+  .final h2{font-size:clamp(26px,3.6vw,40px);font-weight:800;letter-spacing:-.03em;line-height:1.2}
+  .final p{margin-top:16px;color:#9aa6bd;font-size:17px}
+  .final .cta-row{margin-top:34px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .final .btn-line{background:transparent;color:#fff;border-color:rgba(255,255,255,.3)}
+  .final .btn-line:hover{border-color:#fff;background:rgba(255,255,255,.08)}
+  .final .micro{margin-top:18px;font-size:13.5px;color:#6b7484}
+  footer{padding:40px 0;border-top:1px solid var(--line);font-size:13px;color:var(--mute)}
+  footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}
+  footer a{color:var(--ink-2);font-weight:600}
+  footer a:hover{color:var(--ink)}
+  @media(max-width:820px){
+    .hero .grid{grid-template-columns:1fr;gap:44px}
+    .g3,.steps{grid-template-columns:1fr}
+    .cards,.pricing{grid-template-columns:1fr 1fr}
+    .case-grid{grid-template-columns:1fr}
+    section{padding:76px 0}
   }
+  @media(max-width:520px){.cards,.pricing{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-
-<!-- ===== HERO ===== -->
-<header class="hero" id="hero">
+<!-- HERO -->
+<header class="hero">
   <div class="wrap">
-    <span class="badge">MAIA v1.0 · AI 적용 진단</span>
-    <h1>우리 회사 이 업무,<br><span class="accent">AI에게 맡길 수 있을까?</span></h1>
-    <p>8개 질문, 3분이면 됩니다. 이 일을 누가 맡으면 좋을지 알려드립니다.</p>
-    <p class="meta">한국폴리텍대학 대구캠퍼스 이차전지시스템과 · 안창한</p>
-    <button class="btn btn-primary" onclick="startQuiz()">진단 시작하기</button>
+    <div class="grid">
+      <div>
+        <span class="eyebrow">MAIA · AI 메타시스템</span>
+        <h1>이 업무,<br>정말 <span>AI로 바꿀 수 있을까?</span></h1>
+        <p class="lead">감으로 판단하지 않고 <b>정량 점수로 정확히 진단</b>합니다.<br>공장과 사무실의 반복 업무, 하나만 떠올려 보세요.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="diagnosis.html">무료 진단 시작하기 · 8문항 1분</a>
+          <a class="btn btn-line" href="#case">실제 사례 먼저 보기</a>
+        </div>
+        <p class="micro">연락처 없이 바로 점수 확인 · 완전 무료</p>
+      </div>
+      <div class="scorecard">
+        <div class="lab">AI 적용 가능성</div>
+        <div class="num">0.78<small> / 1.00</small></div>
+        <div class="bar"><i></i></div>
+        <div class="verdict">AI로 충분히 개발 가능</div>
+        <div class="cap">8차원 정량 평가 · 실제 진단 결과 예시</div>
+      </div>
+    </div>
   </div>
 </header>
-
-<!-- ===== QUIZ ===== -->
-<div id="quizWrap" class="hidden">
-  <div class="progress">
-    <div class="wrap">
-      <div class="pbar"><i id="pbarFill"></i></div>
-      <span class="pcount" id="pcount">0 / 8</span>
+<!-- META 정의 -->
+<section class="meta-band">
+  <div class="wrap">
+    <span class="eyebrow">단순 외주 개발이 아닙니다</span>
+    <h2>MAIA는 <b>AI가 AI를 진단·개발·검수</b>하는 메타시스템입니다.</h2>
+    <div class="flow">
+      <div class="chip"><span>01</span>진단 — 8차원 정량 점수</div>
+      <div class="chip"><span>02</span>개발 — AI 메타시스템이 직접 설계·구현</div>
+      <div class="chip"><span>03</span>검수 — 4개 AI의 교차 검증</div>
+    </div>
+    <p class="note">진단부터 개발, 검수까지 모두 하나의 메타시스템 안에서 진행합니다. 사람 한 명의 주관적 판단에 의존하지 않고, 4개의 AI가 서로 검증하여 높은 품질을 보장합니다.</p>
+  </div>
+</section>
+<!-- 문제 공감 -->
+<section>
+  <div class="wrap">
+    <span class="eyebrow">이런 업무</span>
+    <h2 class="sec">아직도 사람이 매일 붙어 있나요?</h2>
+    <p class="sec-sub">제조·사무·연구·물류, 분야는 달라도 좋습니다. 매일 반복되고 나름의 규칙이 있는 일이라면 진단할 수 있습니다. 아래는 흔한 예시일 뿐입니다.</p>
+    <div class="g3">
+      <div class="item"><div class="k">01 모으기·취합</div><h3>흩어진 데이터 정리</h3><p>카톡·메일·문서로 흩어져 들어온 내용을 매일 같은 표로 다시 모아 정리하는 일.</p></div>
+      <div class="item"><div class="k">02 옮기기·변환</div><h3>양식 사이 이관</h3><p>도면·전표·문서의 내용을 다른 양식으로 한 줄씩 손으로 옮겨 적는 일.</p></div>
+      <div class="item"><div class="k">03 확인·판정</div><h3>사람 눈으로 판단</h3><p>정해진 기준에 맞는지 사람이 일일이 보고 통과·반려, 합격·불량을 가르는 일.</p></div>
+    </div>
+    <p class="sec-sub" style="margin-top:28px">내 업무가 위와 정확히 같지 않아도 괜찮습니다. <a href="#" onclick="document.querySelectorAll('.cards')[0].scrollIntoView({behavior:'smooth'});return false;" style="color:var(--accent);font-weight:700">아래 8가지 업무 유형</a>에서 비슷한 것을 골라 바로 진단해 보세요.</p>
+  </div>
+</section>
+<!-- 작동 3단계 -->
+<section style="background:var(--bg-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <span class="eyebrow">진행 방식</span>
+    <h2 class="sec">먼저 진단하고, 될 일만 진행합니다</h2>
+    <p class="sec-sub">안 되는 일은 솔직하게 “사람이 해야 할 영역”이라고 알려드립니다.</p>
+    <div class="steps">
+      <div class="step"><div class="n">STEP 01</div><h3>무료 진단</h3><p>8문항 1분 만에 이 업무가 AI로 가능한지 정량 점수를 즉시 확인합니다.</p><span class="free">완전 무료 · 연락처 불필요</span></div>
+      <div class="step"><div class="n">STEP 02</div><h3>무료 상담</h3><p>8문항은 1차 스크리닝입니다. 상담에서 업무를 세밀하게 분석해 AI 범위와 사람 범위를 명확히 구분합니다.</p><span class="free">무료 60분</span></div>
+      <div class="step"><div class="n">STEP 03</div><h3>개발 · 검수</h3><p>합의된 범위만 메타시스템으로 개발하고, 4개의 AI가 철저히 교차 검증합니다.</p><span class="free">개발 비용은 아래 참조</span></div>
     </div>
   </div>
-  <section>
-    <div class="wrap">
-      <div class="section-head">
-        <h2>진단할 업무 하나를 떠올려 주세요</h2>
-        <p>특정 반복 업무·공정 하나를 기준으로 답하면 정확합니다.</p>
+</section>
+<!-- 사례 -->
+<section id="case">
+  <div class="wrap">
+    <span class="eyebrow">적용 사례</span>
+    <h2 class="sec">현장에서 검증된 실제 성과</h2>
+    <p class="sec-sub">진단 1호 기업부터 R&D, 스마트공장까지 다양한 도메인에서 적용되고 있습니다.</p>
+    <div class="case-grid">
+      <div class="case-card">
+        <span class="badge done">진단 완료 · MAIA 1호</span>
+        <h3>피닉슨컨트롤즈</h3>
+        <div class="cat">EV/ESS 배터리 검사·자동화 장비</div>
+        <p>현장 애로기술 3건 진단 — CAD 전기도면→BOM·PLC I/O 자동 변환, 검사 레시피 자동화, 충방전 QC 실시간 이상 탐지. 이후 AI 디지털 트윈 산학 과제로 연계.</p>
       </div>
-      <div class="task-box">
-        <label for="taskInput">어떤 업무를 진단할까요?</label>
-        <input id="taskInput" type="text" placeholder="예: 매일 아침 생산실적을 엑셀에 정리하는 일" />
-        <p class="sub">한 줄로 적어 주세요. 결과를 이 업무에 맞춰 설명해 드립니다. (선택)</p>
-        <div class="task-egs">
-          <p class="task-egs-title">막막하면, 비슷한 업무를 눌러 시작하세요 (누른 뒤 수정해도 됩니다)</p>
-          <div class="eg-group">
-            <div class="eg-group-label">설계·엔지니어링</div>
-            <div class="eg-chips">
-              <span class="eg-chip" onclick="fillTask(this)">CAD 도면을 BOM 엑셀로 수기 이관</span>
-              <span class="eg-chip" onclick="fillTask(this)">PLC I/O·전장도면 매핑 수작업</span>
-            </div>
-          </div>
-          <div class="eg-group">
-            <div class="eg-group-label">현장 데이터·이상탐지</div>
-            <div class="eg-chips">
-              <span class="eg-chip" onclick="fillTask(this)">설비·계측 데이터 이상 패턴 파악</span>
-              <span class="eg-chip" onclick="fillTask(this)">불량·품질 판정을 육안에 의존</span>
-            </div>
-          </div>
-          <div class="eg-group">
-            <div class="eg-group-label">실무 프로세스</div>
-            <div class="eg-chips">
-              <span class="eg-chip" onclick="fillTask(this)">측정 데이터를 보고서에 중복 타이핑</span>
-              <span class="eg-chip" onclick="fillTask(this)">부서별 취합·정기 보고서 작성</span>
-            </div>
-          </div>
-          <div class="eg-group">
-            <div class="eg-group-label">품질 표준화·기술 자산화</div>
-            <div class="eg-chips">
-              <span class="eg-chip" onclick="fillTask(this)">작업자 숙련도 차이로 품질 편차</span>
-              <span class="eg-chip" onclick="fillTask(this)">숙련자 노하우를 알고리즘으로 자산화</span>
-            </div>
-          </div>
-        </div>
+      <div class="case-card">
+        <span class="badge done">설계 완료</span>
+        <h3>협진화학</h3>
+        <div class="cat">정밀화학 R&D 자동화</div>
+        <p>R&D 14개 업무를 MAIA 4-AI로 진단해 11건 개발 가능 판정. 문헌·특허 인텔리전스와 배합 최적화, 2층 코파일럿 시스템으로 설계 완료.</p>
       </div>
-      <form id="quizForm"></form>
-      <div class="quiz-actions">
-        <button class="btn btn-cta" id="submitBtn" disabled onclick="calcResult()">결과 보기 →</button>
-        <p class="hint" id="quizHint">8개 문항에 모두 답해 주세요.</p>
+      <div class="case-card">
+        <span class="badge plan">진행 예정</span>
+        <h3>대구테크노파크</h3>
+        <div class="cat">스마트공장 구축 지원</div>
+        <p>제조AI 멘토링 및 구축 지원. LG 코인셀 생산공정 디지털 트윈을 레퍼런스로 지역 기업 디지털 전환을 지원할 예정입니다.</p>
       </div>
     </div>
-  </section>
-</div>
-
-<!-- ===== RESULT ===== -->
-<div id="resultWrap" class="hidden">
-  <section>
-    <div class="wrap">
-      <div class="section-head">
-        <h2>진단 리포트</h2>
-        <p>MAIA 8개 항목으로 "이 일을 누가 맡으면 좋을지"를 평가한 결과입니다.</p>
-      </div>
-
-      <div class="result-card">
-        <div class="gauge-label">AI 적용 가능성</div>
-        <div class="score-num"><span id="scoreVal">0.00</span><small> / 1.00</small></div>
-        <div class="meter"><i id="meterFill"></i></div>
-        <div class="grade" id="gradeBadge">—</div>
-        <div class="verdict" id="verdictText">—</div>
-        <div class="pnote" id="personalNote"></div>
-        <div class="radar-box"><canvas id="radar" width="380" height="340"></canvas></div>
-        <details class="breakdown" id="breakdown"><summary>점수 계산 내역 보기</summary><div id="breakdownBody"></div></details>
-        <textarea id="shareBox" class="hidden" readonly></textarea>
-      </div>
-
-      <!-- 우리 개발 방식: 세 갈래를 쉽게 -->
-      <div class="modes">
-        <div class="modes-title">우리가 만들어 줄 수 있는 일인지, 세 갈래로</div>
-        <div class="mode-row" id="mode-ai"><b>🤖 AI로 개발</b><span>바로 만들 수 있어요 (사람은 확인만)</span></div>
-        <div class="mode-row" id="mode-co"><b>🤝 함께 개발</b><span>만들 수 있지만 시간·노력이 더 들어요</span></div>
-        <div class="mode-row" id="mode-hu"><b>🙋 전문가가 살펴볼 일</b><span>전문가 분석 후 개발 가능 여부 판단</span></div>
-      </div>
-
-      <div class="funnel-note">
-        이 결과는 <b>8문항 기반의 1차 진단</b>입니다. 8문항이 담지 못하는 부분이 있어,
-        정식 진단에서는 업무를 더 잘게 나눠 <b>어디까지 개발 가능한지</b>를 확인합니다.
-      </div>
-
-      <!-- 맞춤 PDF 리포트 (무료) -->
-      <div class="locked" id="lockedBox">
-        <div class="blur">
-          <ul>
-            <li>📍 어느 일을 왜 AI/사람이 맡아야 하는지 — 항목별 상세 해석</li>
-            <li>⚠️ 가장 먼저 손봐야 할 지점 우선순위</li>
-            <li>🗺️ 30일 개선 로드맵 (무엇부터, 어떻게)</li>
-            <li>📄 맞춤 PDF 리포트</li>
-          </ul>
-        </div>
-        <div class="lock-overlay" id="lockOverlay">
-          <div class="lock-ico">📄</div>
-          <h4>진단 리포트(PDF) 신청</h4>
-          <p>신청하면 항목별 해석·우선순위·단계별 로드맵을 담은 진단 리포트를 보내드립니다. 회사·연락처는 다음 화면에서 한 번만 적으면 됩니다.</p>
-          <button class="btn btn-cta" onclick="openLeadForm(event)">리포트 신청하기</button>
-        </div>
-      </div>
-
-      <!-- 상담 CTA (견적은 상담에서 안내) -->
-      <div class="section-head" style="margin-top:56px">
-        <h2>현장 적용 상담</h2>
-        <p>현장에 맞는 AI 적용 범위와 방법은 전문가가 진단합니다.</p>
-      </div>
-      <div class="cta-single">
-        <div class="cta-card hi">
-          <span class="tier">전문가 상담</span>
-          <h4>현장 진단 · AI 적용 상담</h4>
-          <ul>
-            <li>현장에 맞춘 MAIA 정식 진단</li>
-            <li>AI 적용 방안·PoC 설계</li>
-            <li>안전·법적 검토 포함</li>
-          </ul>
-          <a class="btn btn-cta" href="#" onclick="cta('poc');return false;">상담 신청하기</a>
-        </div>
-      </div>
-
-      <div style="text-align:center"><span class="restart" onclick="restart()">↺ 다시 진단하기</span></div>
+    <p class="case-cap">MAIA 방법론은 위 사례를 포함해 <b>총 22개 업무 케이스</b>로 검증되었습니다 (SCI 논문 투고 중).</p>
+  </div>
+</section>
+<!-- archetype 8 -->
+<section style="background:var(--bg-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <span class="eyebrow">대상 업무 유형</span>
+    <h2 class="sec">어떤 업무가 AI로 될까요?</h2>
+    <p class="sec-sub">8가지 대표 반복 업무입니다. 내 업무와 비슷한 카드를 클릭해 바로 진단해 보세요.</p>
+    <div class="cards">
+      <a class="ac" href="diagnosis.html?src=home&task=데이터집계"><h4>데이터 집계</h4><p>흩어진 데이터를 매일 엑셀로 모으시나요?</p><span class="go">진단 →</span></a>
+      <a class="ac" href="diagnosis.html?src=home&task=추출변환"><h4>추출·변환</h4><p>도면·문서를 표로 직접 옮기시나요?</p><span class="go">진단 →</span></a>
+      <a class="ac" href="diagnosis.html?src=home&task=분류라우팅"><h4>분류·전달</h4><p>메일·문의를 담당자에게 일일이 나눠주시나요?</p><span class="go">진단 →</span></a>
+      <a class="ac" href="diagnosis.html?src=home&task=이상탐지"><h4>이상 탐지</h4><p>설비 데이터를 감으로 모니터링하시나요?</p><span class="go">진단 →</span></a>
+      <a class="ac" href="diagnosis.html?src=home&task=예측"><h4>예측</h4><p>과거 데이터로 미래를 예측하시나요?</p><span class="go">진단 →</span></a>
+      <a class="ac" href="diagnosis.html?src=home&task=검색QA"><h4>검색·문답</h4><p>매뉴얼 찾느라 베테랑에게 매번 물어보시나요?</p><span class="go">진단 →</span></a>
+      <a class="ac" href="diagnosis.html?src=home&task=초안생성"><h4>초안 생성</h4><p>견적서·보고서를 매번 처음부터 작성하시나요?</p><span class="go">진단 →</span></a>
+      <a class="ac" href="diagnosis.html?src=home&task=비전검사"><h4>비전 검사</h4><p>외관 불량을 작업자 눈으로 판정하시나요?</p><span class="go">진단 →</span></a>
     </div>
-  </section>
-</div>
-
+  </div>
+</section>
+<!-- 가격 -->
+<section>
+  <div class="wrap center">
+    <span class="eyebrow">개발 비용</span>
+    <h2 class="sec">개발 비용 안내</h2>
+  </div>
+  <div class="wrap">
+    <div class="pricing">
+      <div class="price hi">
+        <div class="t">T1</div><h4>단일 PoC</h4>
+        <div class="amt">200만~350만<small>원</small></div><div class="dur">3~4주 · 업무 1개</div>
+      </div>
+      <div class="price">
+        <div class="t">T2</div><h4>다중 PoC</h4>
+        <div class="amt">500만~900만<small>원</small></div><div class="dur">6~10주 · 2~3개 업무</div>
+      </div>
+      <div class="price">
+        <div class="t">T3</div><h4>데이터 수집·검증</h4>
+        <div class="amt">+300만~600만<small>원</small></div><div class="dur">+2~4주 · T1·T2 추가</div>
+      </div>
+      <div class="price">
+        <div class="t">T4</div><h4>사후 관리</h4>
+        <div class="amt">연 400만~800만<small>원</small></div><div class="dur">12개월 유지보수</div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- FAQ -->
+<section style="background:var(--bg-2);border-top:1px solid var(--line)">
+  <div class="wrap">
+    <span class="eyebrow">FAQ</span>
+    <h2 class="sec">자주 묻는 질문</h2>
+    <div class="faq">
+      <details><summary>진단은 정말 무료인가요?</summary><div class="a">네, 진단과 점수 확인은 완전 무료이며 연락처 입력 없이 바로 가능합니다. 회사 정보는 리포트·상담 신청 시에만 입력합니다.</div></details>
+      <details><summary>회사 데이터는 안전한가요?</summary><div class="a">진단 점수는 브라우저 내에서만 계산되며, 업무 내용은 서버에 전송·저장되지 않습니다. 리포트 신청 시 입력하는 정보만 <a href="privacy.html" style="color:var(--accent)">개인정보 처리방침</a>에 따라 안전하게 처리합니다.</div></details>
+      <details><summary>AI가 모든 업무를 다 하나요?</summary><div class="a">아닙니다. 점수가 낮은 업무는 명확히 “사람 영역”이라고 안내드립니다. 될 일만 개발합니다.</div></details>
+      <details><summary>개발 후 기대에 미치지 못하면 어떻게 하나요?</summary><div class="a">PoC는 작게 시작해 단계별로 함께 검토합니다. 합의한 목표에 미달할 경우 범위 내에서 재작업해 드립니다. 4-AI 교차 검증으로 품질을 최우선으로 합니다.</div></details>
+      <details><summary>진단만 받고 끝내도 되나요?</summary><div class="a">물론입니다. 진단 결과와 무료 리포트만 받아서 내부 검토 자료로 활용하셔도 전혀 문제없습니다.</div></details>
+    </div>
+  </div>
+</section>
+<!-- 최종 CTA -->
+<section class="final">
+  <div class="wrap">
+    <h2>1분만 투자하면,<br>이 업무가 AI로 되는지 알 수 있습니다</h2>
+    <p>먼저 무료 진단으로 가능성을 확인하고, 필요할 때 상담 신청하세요.</p>
+    <div class="cta-row">
+      <a class="btn btn-accent" href="diagnosis.html">무료 진단 시작하기 · 8문항 1분</a>
+      <a class="btn btn-line" href="https://tally.so/r/A7y8Xo?kind=consult" target="_blank" rel="noopener noreferrer">무료 상담 신청</a>
+    </div>
+    <p class="micro">상담 신청 시 영업일 기준 2~3일 내 회신 · chahn@kopo.ac.kr</p>
+  </div>
+</section>
 <footer>
-  MAIA v1.0 &nbsp;|&nbsp; 한국폴리텍대학 대구캠퍼스 이차전지시스템과 &nbsp;|&nbsp; 안창한 &nbsp;|&nbsp; 2026
-  <br>
-  <a id="privacyLink" href="privacy.html" style="color:var(--blue);text-decoration:none;font-weight:600">개인정보 처리방침</a>
-  &nbsp;·&nbsp;
-  <a href="en.html" style="color:var(--blue);text-decoration:none;font-weight:600">English</a>
+  <div class="wrap">
+    <span>MAIA · 한국폴리텍대학 대구캠퍼스 이차전지시스템과 · 안창한 · 2026</span>
+    <span><a href="diagnosis.html">무료 진단</a> · <a href="privacy.html">개인정보 처리방침</a> · <a href="en.html">English</a></span>
+  </div>
 </footer>
-
-<script>
-/* ── MAIA 8차원 정의 (가중치·채점은 generate_maia_tool.py SOT와 일치) ── */
-const DIMS = [
-  { code:"C1", name:"규칙·구조", weight:0.20,
-    q:"이 업무는 정해진 규칙·기준대로 하나요, 사람의 감·경험으로 하나요?",
-    hint:"정해진 양식·기준에 맞춰 처리할수록 AI에 유리합니다.",
-    opts:[
-      {l:"정해진 규칙 없이 사람의 감·경험으로 한다", s:0.0},
-      {l:"대체로 경험으로 하되 일부 기준·문서가 있다", s:0.3},
-      {l:"정해진 양식·기준·체크리스트대로 한다", s:0.6},
-      {l:"수식·코드·데이터 규칙으로 완전히 정해져 있다", s:0.9},
-    ]},
-  { code:"C2", name:"정보 완전성", weight:0.15,
-    q:"이 일에 필요한 정보가 서류·파일·시스템 안에 다 들어 있나요?",
-    hint:"현장에 직접 가봐야 알 수 있는 정보가 많을수록 낮습니다.",
-    opts:[
-      {l:"현장에 가야만 알 수 있는 게 많다", s:0.0},
-      {l:"일부는 시스템에, 일부는 현장 확인이 필요하다", s:0.4},
-      {l:"대부분 서류·화면으로 확인된다", s:0.7},
-      {l:"모든 정보가 파일·시스템에 디지털로 있다", s:1.0},
-    ]},
-  { code:"C3", name:"보편성", weight:0.20,
-    q:"이 업무는 다른 회사·부서에서도 흔히 하는 일인가요?",
-    hint:"흔한 일일수록 AI가 참고·학습할 사례가 많습니다.",
-    opts:[
-      {l:"우리 회사만의 아주 특수한 일이다", s:0.0},
-      {l:"업계에서 가끔 보이는 일이다", s:0.3},
-      {l:"같은 업종이면 대부분 하는 일이다", s:0.6},
-      {l:"업종 불문 어디서나 하는 표준 업무다", s:0.8},
-    ]},
-  { code:"C4", name:"디지털화", weight:0.15,
-    q:"이 업무는 주로 무엇으로 하나요?",
-    hint:"이미 컴퓨터·시스템으로 할수록 AI가 이어받기 쉽습니다.",
-    opts:[
-      {l:"몸으로 하는 현장 작업이다 (손·기계)", s:0.0},
-      {l:"종이·전화·대면 위주로 한다", s:0.3},
-      {l:"컴퓨터 프로그램으로 한다 (엑셀·사내 시스템 등)", s:0.6},
-      {l:"여러 시스템을 오가며 디지털로만 한다", s:0.9},
-    ]},
-  { code:"C5", name:"결과 검증", weight:0.10,
-    q:"결과가 맞는지 어떻게 확인하나요?",
-    hint:"시스템이 자동으로 걸러줄수록 AI에 유리합니다.",
-    opts:[
-      {l:"현장에서 직접 물건·설비를 봐야 안다", s:0.0},
-      {l:"담당자가 눈으로 일일이 검토한다", s:0.3},
-      {l:"일부는 숫자·시스템이 자동으로 걸러준다", s:0.6},
-      {l:"시스템이 맞는지 자동으로 검증해준다", s:0.9},
-    ]},
-  { code:"C6", name:"오류 영향", weight:0.10,
-    q:"이 업무에서 실수가 나면 어떤 일이 벌어지나요?",
-    hint:"실수의 파장이 클수록 사람의 손이 더 필요합니다.",
-    opts:[
-      {l:"안전사고·설비 파손으로 이어진다", s:0.0},
-      {l:"서비스 중단·고객 피해가 생긴다", s:0.3},
-      {l:"재작업이 필요하다 (안전과는 무관)", s:0.6},
-      {l:"거의 무해하고 금방 바로잡는다", s:0.9},
-    ]},
-  { code:"C7", name:"물리 의존성", weight:0.05, invert:true, gate:true,
-    q:"사람이 직접 손으로 다뤄야 하는 물리 작업이 있나요?",
-    hint:"컴퓨터 입력·클릭·마우스 조작은 '물리 작업'이 아닙니다(자동화 대상). 부품 조립·배선·운반처럼 실제로 손을 써야 하는 것만 해당.",
-    opts:[
-      {l:"없다 — 컴퓨터·서류상으로만 이뤄진다", s:0.0},
-      {l:"가끔 현장에서 물건·설비를 직접 확인·조작해야 한다", s:0.4},
-      {l:"상당 부분 사람이 직접 다뤄야 한다", s:0.7},
-      {l:"대부분 사람 손 작업이다 (조립·배선·운반·계측 등)", s:1.0},
-    ]},
-  { code:"C8", name:"안전·법적 판단", weight:0.05, invert:true, gate:true,
-    q:"이 업무 결과에 법적·안전상의 책임 판단이 필요한가요?",
-    hint:"내용을 한 번 보고 넘기는 '단순 검토·컨펌'은 책임 판단이 아닙니다. 서명·인허가처럼 사람이 법적 책임을 지는 것만 해당.",
-    opts:[
-      {l:"필요 없다 — 일반 사무 결과물이다", s:0.0},
-      {l:"AI가 만들고 사람이 검토·컨펌하면 된다", s:0.3},
-      {l:"법적·안전상 사람의 공식 승인이 꼭 필요하다", s:0.7},
-      {l:"사람이 법적·안전 책임을 단독 판단해야 한다 (서명 등)", s:1.0},
-    ]},
-];
-
-const answers = new Array(DIMS.length).fill(null);
-const answerIdx = new Array(DIMS.length).fill(null);
-
-/* ── 운영 설정 (🙋 계정 생성 후 URL만 채우면 가동) ──
-   신청 폼은 leadFormAction(A7y8Xo) 하나로 통일한다 — 중복 폼 금지(2026-05-30 정책).
-   모든 신청(자가진단 리드·상세 리포트·PoC)은 같은 폼으로 보내고, 어느 버튼에서
-   왔는지는 kind 파라미터(lead/detail/poc)로만 구분한다(Tally hidden field로 수신).
-   - leadFormAction : 단일 통합 신청 폼 (Tally). 모든 CTA가 공유
-   - detailReportUrl: 비워두면 leadFormAction을 그대로 재사용(권장). 별도 폼 만들지 말 것
-   - pocBookingUrl  : 상담 '시간 예약'은 폼과 기능이 다름 → Cal.com/Calendly 전용.
-                      비워두면 leadFormAction으로 폴백(시간 조율은 수동)
-   진단 점수·등급은 폼 URL에 자동으로 붙어 리드 기록에 함께 저장된다. */
-const CONFIG = {
-  // 발행 모드(2026-06-09): leadEnabled=true → 리드 수집 퍼널 ON(개인 명의 처리방침 v1.0 적용).
-  // 공개 전제: Tally 필수/선택 2단 동의 설정 완료. false로 바꾸면 진단만(개인정보 0) 모드로 전환.
-  leadEnabled:     true,
-  operatorEmail:   "chahn@kopo.ac.kr",  // Tally 없이 신청 받을 주소(폴백). 신청자 메일앱으로 발송됨
-  leadFormAction:  "https://tally.so/r/A7y8Xo",   // Tally 단일 통합 폼 (2026-05-30 연결). 점수·등급·업무 자동 전달
-  detailReportUrl: "",   // 비워두면 leadFormAction 재사용. 새 폼 생성 금지(중복 입력 방지)
-  pocBookingUrl:   "",   // (선택) Cal.com 상담 예약. 비우면 leadFormAction 폴백. 예: "https://cal.com/maia/diagnosis"
-};
-let lastResult = { score:null, gated:false, grade:"", task:"", answers:[] };
-
-/* 점수·등급·업무명·8답변을 쿼리스트링으로 붙여 폼/예약에 전달.
-   a(=C1..C8 raw)와 task는 맞춤 진단 리포트(generate_maia_report.py) 생성에 사용된다.
-   Tally 숨김 필드(score·grade·task·a·src·email·kind)로 자동 수신 → 운영자/Make가 리포트 생성.
-   src: ?src=community 단일 파라미터를 우선 추출(채널 추적), 없으면 location.search 전체 보존(폴백).
-   kind: 호출 인자(버튼 출처) 우선, 없으면 ?kind=detail/poc URL 오버라이드, 둘 다 없으면 'lead'.
-         운영자가 Tally 폼에 hidden field 'kind'를 등록해야 시트에 적재됨 (intake-sop.md §7-1 참조). */
-function withResult(url, kind){
-  if(!url) return "";
-  const urlParams = new URLSearchParams(location.search);
-  const srcVal = urlParams.get('src') || (location.search||"").replace(/^\?/,'');
-  const kindVal = kind || urlParams.get('kind') || "lead";
-  const q = new URLSearchParams({
-    kind:  kindVal,                                  // 출처 구분(lead/detail/poc). 단일 통합 폼 정책
-    score: lastResult.gated ? "gated" : (lastResult.score!=null?lastResult.score.toFixed(2):""),
-    grade: lastResult.grade || "",
-    task:  lastResult.task || "",
-    a:     (lastResult.answers||[]).join(','),       // C1..C8 raw — 항목별 해석 생성용
-    src:   srcVal                                    // 채널 추적: community/blog/youtube/email 등
-  });
-  return url + (url.includes('?')?'&':'?') + q.toString();
-}
-
-/* 예시 칩 클릭 → 진단 업무 입력란 채움(수정 가능). 직접 입력 우선, 칩은 보조. */
-function fillTask(el){
-  const inp = document.getElementById('taskInput');
-  if(!inp) return;
-  inp.value = (el.textContent || '').trim();
-  inp.focus();
-}
-
-/* ── 렌더 ── */
-function buildQuiz(){
-  const form = document.getElementById('quizForm');
-  form.innerHTML = DIMS.map((d,i)=>`
-    <div class="q" data-i="${i}">
-      <div class="code">${d.code} · ${d.name}${d.gate?'<span class="gate-tag">하드게이트</span>':''}</div>
-      <h3>${d.q}</h3>
-      ${d.hint?`<p class="q-hint">💡 ${d.hint}</p>`:''}
-      <div class="opts">
-        ${d.opts.map((o,j)=>`
-          <label class="opt" data-i="${i}" data-j="${j}">
-            <input type="radio" name="q${i}" value="${o.s}" />
-            <span>${o.l}</span>
-          </label>`).join('')}
-      </div>
-    </div>`).join('');
-
-  form.querySelectorAll('.opt').forEach(el=>{
-    el.addEventListener('click',()=>{
-      const i=+el.dataset.i, j=+el.dataset.j;
-      answers[i]=DIMS[i].opts[j].s;
-      answerIdx[i]=j;
-      el.parentElement.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));
-      el.classList.add('sel');
-      el.querySelector('input').checked=true;
-      updateProgress();
-    });
-  });
-}
-
-function updateProgress(){
-  const done=answers.filter(a=>a!==null).length;
-  document.getElementById('pbarFill').style.width=(done/DIMS.length*100)+'%';
-  document.getElementById('pcount').textContent=`${done} / ${DIMS.length}`;
-  const ready=done===DIMS.length;
-  document.getElementById('submitBtn').disabled=!ready;
-  document.getElementById('quizHint').textContent=
-    ready?'모두 답했습니다. 결과를 확인하세요.':`${DIMS.length-done}개 문항이 남았습니다.`;
-}
-
-function startQuiz(){
-  document.getElementById('hero').classList.add('hidden');
-  document.getElementById('quizWrap').classList.remove('hidden');
-  window.scrollTo(0,0);
-}
-
-/* ── 점수 계산 (엔진과 동일) ──
-   score = Σ(C1..C6 * w) + (1-C7)*0.05 + (1-C8)*0.05
-   하드게이트: C7 raw==1.0 또는 C8 raw==1.0 → 🙋 강제 (점수 계산 생략) */
-function calcResult(){
-  const gated = (answers[6]===1.0) || (answers[7]===1.0);
-  let score=null;
-  if(!gated){
-    score=0;
-    DIMS.forEach((d,i)=>{
-      const v=d.invert ? (1-answers[i]) : answers[i];
-      score += v*d.weight;
-    });
-    score=Math.round(score*1000)/1000;
-  }
-  showResult(score, gated);
-}
-
-/* MAIA 판정 = "우리 시스템이 이 일을 개발해 줄 수 있는가" (8문항 1차 스크리닝)
-   AI 단독=무조건 개발 가능 / 협업=개발 가능하나 노력↑ / 사람 단독=설문상 어려움(상담서 확정)
-   ※ 설문이 모든 걸 담지 못하므로 어떤 결과든 리포트+상담으로 확정한다(막다른 길 금지). */
-function gradeOf(score, gated){
-  if(gated) return {label:"🙋 전문가가 살펴봐야 할 일이에요", cls:"red", mode:"전문가 분석 후 개발 가능 여부 판단",
-    verdict:"설문상으로는 전문가 진단이 필요한 일로 보입니다. 8문항이 모든 상황을 담지는 못합니다. 손작업·안전 책임 주변 업무는 AI로 도울 여지가 있고, 정식 진단에서 확인합니다."};
-  if(score>=0.75) return {label:"🤖 AI로 개발할 수 있어요", cls:"green", mode:"AI 단독 · 개발 가능",
-    verdict:"AI가 맡아 처리할 수 있는 일입니다. 바로 시작할 수 있고, 사람은 확인만 하면 됩니다. 시작 방법은 정식 진단에서 정합니다."};
-  if(score>=0.50) return {label:"🤝 AI와 사람이 함께라면 개발할 수 있어요", cls:"yellow", mode:"사람·AI 협업 · 개발 가능",
-    verdict:"개발할 수 있는 일입니다. 어디까지 AI가 맡고 어디부터 사람이 확인할지는 정식 진단에서 정합니다."};
-  return {label:"🙋 전문가가 살펴봐야 할 일이에요", cls:"red", mode:"전문가 분석 후 개발 가능 여부 판단",
-    verdict:"설문상으로는 사람의 손이 큰 영역으로 보입니다. 8문항이 담지 못한 부분이 있어, 업무를 정리하면 '함께 개발'로 올라갈 수 있습니다. 정식 진단에서 확인합니다."};
-}
-
-/* ── 차원별 사용자 언어 이유 (맞춤 설명용) ── */
-const REASON_LOW = {  // 점수가 낮을 때 = AI 도입을 막는 요인
-  C1:"정해진 규칙 없이 사람의 감으로 하는 점",
-  C2:"현장에 가야만 알 수 있는 정보가 많은 점",
-  C3:"우리 회사만의 특수한 일이라는 점",
-  C4:"컴퓨터가 아니라 현장·종이로 처리하는 점",
-  C5:"결과가 맞는지 사람이 직접 확인해야 하는 점",
-  C6:"실수가 큰 사고로 이어질 수 있는 점",
-  C7:"사람 손이 꼭 필요한 작업인 점",
-  C8:"사람이 직접 책임지고 판단해야 하는 점",
-};
-const REASON_HIGH = { // 점수가 높을 때 = AI에 유리한 요인
-  C1:"업무가 규칙·문서로 잘 정리돼 있는 점",
-  C2:"필요한 정보를 화면으로 다 볼 수 있는 점",
-  C3:"어디서나 하는 보편적인 일이라는 점",
-  C4:"이미 컴퓨터·시스템으로 하고 있는 점",
-  C5:"결과를 시스템이 자동으로 확인해 주는 점",
-  C6:"실수가 나도 크게 위험하지 않은 점",
-  C7:"손으로 하는 작업이 거의 없는 점",
-  C8:"안전·법적 판단 부담이 적은 점",
-};
-
-/* 신청자 입력(업무명 + 답변)을 되짚는 맞춤 문장 생성 */
-function personalNote(){
-  const task = (document.getElementById('taskInput')?.value||'').trim();
-  const eff = DIMS.map((d,i)=>({code:d.code, v:(d.invert?(1-answers[i]):answers[i])}));
-  const weak = [...eff].sort((a,b)=>a.v-b.v).filter(x=>x.v<=0.45).slice(0,2);
-  const strong = [...eff].sort((a,b)=>b.v-a.v).filter(x=>x.v>=0.6).slice(0,2);
-
-  let html = task
-    ? `<div class="pn-task">📋 입력하신 <b>'${task}'</b></div>`
-    : `<div class="pn-task">📋 답변을 종합하면</div>`;
-  if(weak.length){
-    html += `<div class="pn-group"><div class="pn-label">전문가 진단이 필요한 점</div><ul>`
-          + weak.map(w=>`<li>${REASON_LOW[w.code]}</li>`).join('') + `</ul></div>`;
-  }
-  if(strong.length){
-    html += `<div class="pn-group"><div class="pn-label pn-good">이미 갖춘 강점</div><ul>`
-          + strong.map(s=>`<li>${REASON_HIGH[s.code]}</li>`).join('') + `</ul></div>`;
-  }
-  return html;
-}
-
-const GRADE_COLORS={
-  green:{bg:"var(--green-bg)",fg:"var(--green-fg)",bar:"#36A85B"},
-  yellow:{bg:"var(--yellow-bg)",fg:"var(--yellow-fg)",bar:"#E0A52E"},
-  red:{bg:"var(--red-bg)",fg:"var(--red-fg)",bar:"#D9534F"},
-};
-
-function showResult(score, gated){
-  document.getElementById('quizWrap').classList.add('hidden');
-  document.getElementById('resultWrap').classList.remove('hidden');
-  window.scrollTo(0,0);
-
-  const g=gradeOf(score,gated);
-  lastResult = { score, gated, grade:g.label,
-    task:(document.getElementById('taskInput')?.value||'').trim(),
-    answers:[...answers] };
-  const c=GRADE_COLORS[g.cls];
-  const shown = gated ? 0 : score;
-
-  document.getElementById('scoreVal').textContent = gated ? "—" : score.toFixed(2);
-  const meter=document.getElementById('meterFill');
-  meter.style.background=c.bar;
-  setTimeout(()=>{meter.style.width=(shown*100)+'%';},80);
-
-  const badge=document.getElementById('gradeBadge');
-  badge.textContent=g.label; badge.style.background=c.bg; badge.style.color=c.fg;
-  document.getElementById('verdictText').textContent=g.verdict;
-  document.getElementById('personalNote').innerHTML=personalNote();
-
-  // 3-mode 안내에서 현재 결과 강조
-  ['mode-ai','mode-co','mode-hu'].forEach(id=>document.getElementById(id).classList.remove('on'));
-  const modeId = g.cls==='green' ? 'mode-ai' : (g.cls==='yellow' ? 'mode-co' : 'mode-hu');
-  document.getElementById(modeId).classList.add('on');
-
-  buildBreakdown(score, gated, g);
-  drawRadar();
-}
-
-/* 점수 계산 내역 표 + 복사용 텍스트 생성 */
-function buildBreakdown(score, gated, g){
-  const task=(document.getElementById('taskInput')?.value||'').trim();
-  let rows='', txt=[];
-  txt.push('── MAIA 진단 결과 ──');
-  if(task) txt.push('업무: '+task);
-  txt.push('판정: '+g.label+'  ('+g.mode+')');
-  txt.push('AI 적용 가능성: '+(gated?'하드게이트(점수 무시)':score.toFixed(3)));
-  txt.push('');
-  txt.push('[항목별 답변·점수]');
-  DIMS.forEach((d,i)=>{
-    const idx=answerIdx[i];
-    const ansLabel = idx!=null ? d.opts[idx].l : '—';
-    const raw = answers[i];
-    const eff = d.invert ? (1-raw) : raw;          // 점수에 반영되는 값
-    const contrib = eff*d.weight;
-    const note = d.invert ? `${raw.toFixed(2)}→${eff.toFixed(2)}` : eff.toFixed(2);
-    rows += `<tr><td><b>${d.code}</b> ${d.name}</td><td>${ansLabel}</td>`
-          + `<td class="num">${note}</td><td class="num">×${d.weight.toFixed(2)}</td>`
-          + `<td class="num">${contrib.toFixed(3)}</td></tr>`;
-    txt.push(`${d.code} ${d.name}: "${ansLabel}" → 값 ${note} ×${d.weight.toFixed(2)} = ${contrib.toFixed(3)}`);
-  });
-  const totalRow = gated
-    ? `<tr class="bd-total"><td colspan="4">합계 (하드게이트 발동)</td><td class="num">—</td></tr>`
-    : `<tr class="bd-total"><td colspan="4">합계</td><td class="num">${score.toFixed(3)}</td></tr>`;
-  document.getElementById('breakdownBody').innerHTML =
-    `<table class="bd-table"><thead><tr><th>항목</th><th>선택한 답변</th><th>값</th><th>가중치</th><th>기여</th></tr></thead>`
-    + `<tbody>${rows}${totalRow}</tbody></table>`
-    + `<p style="font-size:12px;color:var(--gray);padding:10px 14px">C7·C8은 "역전" 항목: 입력값이 높을수록 점수에 불리(값=1−입력). 입력이 최댓값이면 하드게이트로 사람 단독 강제.</p>`;
-  txt.push('');
-  txt.push('판정 기준: ≥0.75 AI / 0.50~0.74 협업 / <0.50 사람 / C7·C8 최댓값=사람(하드게이트)');
-  document.getElementById('shareBox').value = txt.join('\n');
-}
-
-/* ── 레이더 차트 (vanilla canvas, 외부 라이브러리 없음) ── */
-function drawRadar(){
-  const cv=document.getElementById('radar');
-  const dpr=window.devicePixelRatio||1;
-  const W=380,H=340;
-  cv.width=W*dpr; cv.height=H*dpr; cv.style.width=W+'px'; cv.style.height=H+'px';
-  const ctx=cv.getContext('2d'); ctx.scale(dpr,dpr);
-  ctx.clearRect(0,0,W,H);
-
-  const cx=W/2, cy=H/2+8, R=120, N=DIMS.length;
-  // 표시값: C7/C8은 역전 적용 (높을수록 AI 유리)
-  const vals=DIMS.map((d,i)=> d.invert ? (1-answers[i]) : answers[i]);
-
-  // grid
-  ctx.strokeStyle="#E3E9F2"; ctx.fillStyle="#9AA7BD"; ctx.font="11px Pretendard,sans-serif";
-  for(let ring=1;ring<=4;ring++){
-    const r=R*ring/4;
-    ctx.beginPath();
-    for(let i=0;i<=N;i++){
-      const a=-Math.PI/2 + i*2*Math.PI/N;
-      const x=cx+r*Math.cos(a), y=cy+r*Math.sin(a);
-      i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
-    }
-    ctx.stroke();
-  }
-  // axes + labels
-  for(let i=0;i<N;i++){
-    const a=-Math.PI/2 + i*2*Math.PI/N;
-    const x=cx+R*Math.cos(a), y=cy+R*Math.sin(a);
-    ctx.strokeStyle="#E3E9F2"; ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(x,y); ctx.stroke();
-    const lx=cx+(R+18)*Math.cos(a), ly=cy+(R+18)*Math.sin(a);
-    ctx.fillStyle="#5A6B85"; ctx.textAlign="center"; ctx.textBaseline="middle";
-    ctx.fillText(DIMS[i].code, lx, ly);
-  }
-  // data polygon
-  ctx.beginPath();
-  for(let i=0;i<=N;i++){
-    const k=i%N;
-    const a=-Math.PI/2 + k*2*Math.PI/N;
-    const r=R*Math.max(0.02,vals[k]);
-    const x=cx+r*Math.cos(a), y=cy+r*Math.sin(a);
-    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
-  }
-  ctx.closePath();
-  ctx.fillStyle="rgba(46,117,182,.22)"; ctx.fill();
-  ctx.strokeStyle="#2E75B6"; ctx.lineWidth=2; ctx.stroke();
-  // points
-  for(let i=0;i<N;i++){
-    const a=-Math.PI/2 + i*2*Math.PI/N;
-    const r=R*Math.max(0.02,vals[i]);
-    ctx.beginPath(); ctx.arc(cx+r*Math.cos(a),cy+r*Math.sin(a),3.2,0,2*Math.PI);
-    ctx.fillStyle="#1F3864"; ctx.fill();
-  }
-}
-
-/* ── 리포트 신청 ──
-   Tally 폼이 있으면 진단 결과(score·grade·task·a·src)를 hidden으로 넘기며 새 탭으로 연다.
-   회사·이메일·연락처는 Tally에서 한 번만 입력(HTML에서 또 묻지 않음 — 중복 입력 방지). */
-function openLeadForm(e){
-  if(e) e.preventDefault();
-  if(!CONFIG.leadEnabled){ setLockClosed(); return false; }   // 1단계: 개인정보 수집(Tally) 비활성
-  if(CONFIG.leadFormAction){
-    window.open(withResult(CONFIG.leadFormAction, 'lead'), '_blank');
-  } else if(CONFIG.operatorEmail){
-    // 폴백: Tally 미설정 시 운영자 메일로 진단 요약 발송. 회사·연락처는 본문에 직접 작성.
-    const subject='[진단 리포트 신청]';
-    const body='진단 결과입니다. 회사/기관 · 이메일 · 연락처를 적어 회신해 주세요.\n\n'
-      +(document.getElementById('shareBox')?.value||'');
-    window.location.href='mailto:'+CONFIG.operatorEmail
-      +'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
-  }
-  try{ localStorage.setItem('maia_lead', JSON.stringify({result:lastResult,at:Date.now(),src:location.search})); }catch(_){}
-  const ov=document.getElementById('lockOverlay');
-  ov.innerHTML=`<div class="lock-ico">✅</div><h4>신청 화면이 열렸어요</h4>
-    <p>새 탭에서 연락처를 한 번만 입력하고 제출하면, 진단 리포트를 보내드립니다.</p>`;
-  // 신청 완료: overlay를 불투명 처리해 뒤 미리보기(blur)와 글자가 겹치지 않게 한다.
-  ov.style.background='rgba(255,255,255,.97)';
-  return false;
-}
-
-/* ── 결과 복사 (교수님/상담용: 채팅·메모에 붙여넣기) ── */
-function copyResult(){
-  const box=document.getElementById('shareBox');
-  box.classList.remove('hidden');
-  box.focus(); box.select();
-  let ok=false;
-  try{ ok=document.execCommand('copy'); }catch(_){}
-  if(navigator.clipboard){ try{ navigator.clipboard.writeText(box.value); }catch(_){} }
-  alert(ok ? '결과가 복사됐어요. 채팅에 붙여넣어 주세요.'
-           : '아래 상자 내용을 전체 선택(Ctrl+A) 후 복사해 붙여넣어 주세요.');
-}
-
-/* ── 전환 CTA ──
-   전용 URL(detailReportUrl·pocBookingUrl)이 있으면 그것을, 없으면 leadFormAction
-   단일 통합 폼을 재사용한다(중복 폼 금지). 어느 버튼에서 왔는지는 kind로 구분한다. */
-function cta(kind){
-  if(!CONFIG.leadEnabled){   // 1단계: 상담 신청도 Tally(개인정보 수집)이므로 차단
-    alert('지금은 무료 진단만 운영 중입니다. 상담·상세 리포트 문의는 chahn@kopo.ac.kr 로 보내 주세요.');
-    return;
-  }
-  const url = (kind==='poc' ? CONFIG.pocBookingUrl : CONFIG.detailReportUrl)
-              || CONFIG.leadFormAction;   // 폴백: 단일 통합 폼 재사용
-  if(url){
-    window.open(withResult(url, kind), '_blank');   // kind는 withResult가 부착(중복 방지)
-    return;
-  }
-  alert(kind==='poc'
-    ? '현장 정식진단·PoC 상담 예약 링크 준비 중입니다.'
-    : '공정별 상세 리포트 신청 링크 준비 중입니다.');
-}
-
-function restart(){
-  answers.fill(null); answerIdx.fill(null);
-  buildQuiz(); updateProgress();
-  const ti=document.getElementById('taskInput'); if(ti) ti.value='';
-  const sb=document.getElementById('shareBox'); if(sb){ sb.value=''; sb.classList.add('hidden'); }
-  ['mode-ai','mode-co','mode-hu'].forEach(id=>document.getElementById(id).classList.remove('on'));
-  document.getElementById('resultWrap').classList.add('hidden');
-  document.getElementById('quizWrap').classList.remove('hidden');
-  // 무료 PDF 게이트 초기화
-  const ov=document.getElementById('lockOverlay');
-  ov.innerHTML=`<div class="lock-ico">📄</div><h4>진단 리포트(PDF) 신청</h4>
-    <p>신청하면 항목별 해석·우선순위·단계별 로드맵을 담은 진단 리포트를 보내드립니다. 회사·연락처는 다음 화면에서 한 번만 적으면 됩니다.</p>
-    <button class="btn btn-cta" onclick="openLeadForm(event)">리포트 신청하기</button>`;
-  ov.style.background='';  // overlay 반투명 원복
-  if(!CONFIG.leadEnabled) setLockClosed();   // 1단계: 신청 버튼 대신 안내 유지
-  window.scrollTo(0,0);
-}
-
-/* ── 2단계 발행 게이트 (개인정보 수집 on/off) ──
-   leadEnabled=false면 Tally(개인정보) UI를 비활성화하고 진단만 노출. true 전환 시 복원. */
-function setLockClosed(){
-  const ov=document.getElementById('lockOverlay');
-  if(!ov) return;
-  ov.innerHTML=`<div class="lock-ico">🔧</div><h4>상세 리포트는 곧 열립니다</h4>`
-    +`<p>지금은 무료 진단만 운영 중입니다. 상세 리포트·상담 문의는 <b>chahn@kopo.ac.kr</b> 로 보내 주세요.</p>`;
-  ov.style.background='rgba(255,255,255,.97)';
-}
-function applyLeadGate(){
-  if(CONFIG.leadEnabled) return;
-  const pl=document.getElementById('privacyLink');
-  if(pl) pl.outerHTML='<span style="color:var(--gray)">이 진단은 개인정보를 수집하지 않습니다 · 점수는 브라우저에서 계산됩니다</span>';
-  setLockClosed();
-}
-
-buildQuiz();
-applyLeadGate();
-</script>
 </body>
 </html>
