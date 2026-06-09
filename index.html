@@ -6,7 +6,10 @@
                      · 사례 카드 가독성(불릿 줄바꿈) · SCI 문구 삭제 · 가격 "~부터+상담 후 확정"
   v0.6 (2026-06-09): Hero 무료 micro 삭제 · 본문 줄바꿈 문장단위 통일(4곳)
                      · 가격 단계기준 명시(기본 T1·T2/옵션 T3·T4) + "메타시스템이라 가능한 가격"
+  v0.7 (2026-06-09): 카피 다이어트(meta note·부제·사례불릿·step 설명 압축, 문제공감 중복문 삭제)
+                     · Hero 여백 확대(패딩·요소간격·단 간격)
 -->
+
 
 
 <html lang="ko">
@@ -51,15 +54,15 @@
   .btn-accent{background:var(--accent);color:#fff;font-size:16px;padding:15px 30px}
   .btn-accent:hover{background:#1d4fd0}
   /* HERO */
-  .hero{padding:120px 0 96px;border-bottom:1px solid var(--line)}
+  .hero{padding:148px 0 124px;border-bottom:1px solid var(--line)}
   .hero .eyebrow{display:block}
-  .hero h1{font-size:clamp(36px,6.4vw,68px);font-weight:800;letter-spacing:-.04em;line-height:1.08;margin-top:20px}
+  .hero h1{font-size:clamp(36px,6.4vw,68px);font-weight:800;letter-spacing:-.04em;line-height:1.12;margin-top:30px}
   .hero h1 span{color:var(--mute)}
-  .hero .lead{margin-top:26px;font-size:clamp(17px,2.4vw,21px);color:var(--ink-2);max-width:560px;line-height:1.6}
+  .hero .lead{margin-top:36px;font-size:clamp(17px,2.4vw,21px);color:var(--ink-2);max-width:560px;line-height:1.7}
   .hero .lead b{color:var(--ink);font-weight:700}
-  .hero .cta-row{margin-top:38px;display:flex;gap:12px;flex-wrap:wrap}
+  .hero .cta-row{margin-top:48px;display:flex;gap:12px;flex-wrap:wrap}
   .hero .micro{margin-top:18px;font-size:14px;color:var(--mute)}
-  .hero .grid{display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:center}
+  .hero .grid{display:grid;grid-template-columns:1.1fr .9fr;gap:80px;align-items:center}
   .scorecard{border:1px solid var(--line);border-radius:18px;padding:34px;background:var(--bg-2)}
   .scorecard .lab{font-size:13px;color:var(--mute);font-weight:600;letter-spacing:.02em}
   .scorecard .num{font-size:68px;font-weight:800;letter-spacing:-.04em;line-height:1;margin:6px 0 0}
@@ -156,7 +159,7 @@
       <div>
         <span class="eyebrow">MAIA · AI 메타시스템</span>
         <h1>이 업무,<br>정말 <span>AI로 바꿀 수 있을까?</span></h1>
-        <p class="lead">감으로 판단하지 않고 <b>정량 점수로 정확히 진단</b>합니다.<br>공장과 사무실의 반복 업무, 하나만 떠올려 보세요.</p>
+        <p class="lead">공장·사무실의 반복 업무, <b>점수로 진단</b>합니다.</p>
         <div class="cta-row">
           <a class="btn btn-primary" href="diagnosis.html">무료 진단 시작하기 · 8문항 1분</a>
           <a class="btn btn-line" href="#case">실제 사례 먼저 보기</a>
@@ -182,7 +185,7 @@
       <div class="chip"><span>02</span>개발 — AI 메타시스템이 직접 설계·구현</div>
       <div class="chip"><span>03</span>검수 — 4개 AI의 교차 검증</div>
     </div>
-    <p class="note">진단부터 개발, 검수까지 모두 하나의 메타시스템 안에서 진행합니다.<br>사람 한 명의 주관적 판단에 의존하지 않고, 4개의 AI가 서로 검증하여 높은 품질을 보장합니다.</p>
+    <p class="note">사람 한 명의 감이 아니라, 4개의 AI가 서로 교차검증합니다.</p>
   </div>
 </section>
 <!-- 문제 공감 -->
@@ -190,16 +193,12 @@
   <div class="wrap">
     <span class="eyebrow">이런 업무</span>
     <h2 class="sec">아직도 사람이 매일 붙어 있나요?</h2>
-    <p class="sec-sub">제조·사무·연구·물류, 분야는 달라도 좋습니다.<br>
-      매일 반복되고 나름의 규칙이 있는 일이라면 진단할 수 있습니다.<br>
-      아래는 흔한 예시일 뿐입니다.</p>
+    <p class="sec-sub">분야는 달라도, 매일 반복되는 일이라면 진단됩니다.</p>
     <div class="g3">
       <div class="item"><div class="k">01 모으기·취합</div><h3>흩어진 데이터 정리</h3><p>카톡·메일·문서로 흩어져 들어온 내용을 매일 같은 표로 다시 모아 정리하는 일.</p></div>
       <div class="item"><div class="k">02 옮기기·변환</div><h3>양식 사이 이관</h3><p>도면·전표·문서의 내용을 다른 양식으로 한 줄씩 손으로 옮겨 적는 일.</p></div>
       <div class="item"><div class="k">03 확인·판정</div><h3>사람 눈으로 판단</h3><p>정해진 기준에 맞는지 사람이 일일이 보고 통과·반려, 합격·불량을 가르는 일.</p></div>
     </div>
-    <p class="sec-sub" style="margin-top:28px">내 업무가 위와 정확히 같지 않아도 괜찮습니다.<br>
-      <a href="#" onclick="document.querySelectorAll('.cards')[0].scrollIntoView({behavior:'smooth'});return false;" style="color:var(--accent);font-weight:700">아래 8가지 업무 유형</a>에서 비슷한 것을 골라 바로 진단해 보세요.</p>
   </div>
 </section>
 <!-- 작동 3단계 -->
@@ -209,9 +208,9 @@
     <h2 class="sec">먼저 진단하고, 되는 것만 개발합니다</h2>
     <p class="sec-sub">안 되는 일은 “사람이 해야 할 영역”이라고 분명히 알려드립니다.</p>
     <div class="steps">
-      <div class="step"><div class="n">STEP 01</div><h3>무료 진단</h3><p>8문항 1분 만에 이 업무가 AI로 가능한지 정량 점수를 즉시 확인합니다.</p></div>
-      <div class="step"><div class="n">STEP 02</div><h3>무료 상담</h3><p>8문항은 1차 스크리닝입니다. 상담에서 업무를 세밀하게 분석해 AI 범위와 사람 범위를 명확히 구분합니다.</p></div>
-      <div class="step"><div class="n">STEP 03</div><h3>개발 · 검수</h3><p>합의된 범위만 메타시스템으로 개발하고, 4개의 AI가 철저히 교차 검증합니다.</p><span class="free">개발 비용은 아래 참조</span></div>
+      <div class="step"><div class="n">STEP 01</div><h3>무료 진단</h3><p>8문항 1분, 점수로 즉시 확인.</p></div>
+      <div class="step"><div class="n">STEP 02</div><h3>무료 상담</h3><p>업무를 쪼개 AI 영역과 사람 영역을 가립니다.</p></div>
+      <div class="step"><div class="n">STEP 03</div><h3>개발 · 검수</h3><p>합의된 범위만 개발하고 4-AI로 검수합니다.</p></div>
     </div>
   </div>
 </section>
@@ -226,19 +225,19 @@
         <span class="badge done">진단 완료 · MAIA 1호</span>
         <h3>피닉슨컨트롤즈</h3>
         <div class="cat">EV/ESS 배터리 검사·자동화 장비</div>
-        <p>현장 애로기술 3건 진단.<br>· CAD 전기도면 → BOM·PLC I/O 자동 변환<br>· 검사 레시피 자동화<br>· 충방전 QC 실시간 이상 탐지<br>→ AI 디지털 트윈 산학 과제로 연계</p>
+        <p>현장 애로기술 3건 진단.<br>→ AI 디지털 트윈 산학 과제로 연계.</p>
       </div>
       <div class="case-card">
         <span class="badge done">설계 완료</span>
         <h3>협진화학</h3>
         <div class="cat">정밀화학 R&D 자동화</div>
-        <p>R&D 14개 업무를 4-AI로 진단.<br>→ 11건 개발 가능 판정<br>· 문헌·특허 인텔리전스<br>· 배합 최적화<br>· 2층 코파일럿으로 설계 완료</p>
+        <p>R&D 14개 업무 진단 → 11건 개발 가능 판정.<br>→ 2층 코파일럿으로 설계 완료.</p>
       </div>
       <div class="case-card">
         <span class="badge plan">진행 예정</span>
         <h3>대구테크노파크</h3>
         <div class="cat">스마트공장 구축 지원</div>
-        <p>제조AI 멘토링·구축 지원 예정.<br>· LG 코인셀 생산공정 디지털 트윈을 레퍼런스로<br>· 지역 제조기업 디지털 전환 지원</p>
+        <p>제조AI 멘토링·구축 지원 예정.<br>LG 코인셀 디지털 트윈을 레퍼런스로.</p>
       </div>
     </div>
     <p class="case-cap">MAIA 방법론은 위 사례를 포함해 <b>총 22개 업무 케이스</b>로 검증되었습니다.</p>
@@ -249,7 +248,7 @@
   <div class="wrap">
     <span class="eyebrow">대상 업무 유형</span>
     <h2 class="sec">어떤 업무가 AI로 될까요?</h2>
-    <p class="sec-sub">8가지 대표 반복 업무입니다.<br>내 업무와 비슷한 카드를 클릭해 바로 진단해 보세요.</p>
+    <p class="sec-sub">비슷한 카드를 눌러 바로 진단해 보세요.</p>
     <div class="cards">
       <a class="ac" href="diagnosis.html?src=home&task=데이터집계"><h4>데이터 집계</h4><p>흩어진 데이터를 매일 엑셀로 모으시나요?</p><span class="go">진단 →</span></a>
       <a class="ac" href="diagnosis.html?src=home&task=추출변환"><h4>추출·변환</h4><p>도면·문서를 표로 직접 옮기시나요?</p><span class="go">진단 →</span></a>
